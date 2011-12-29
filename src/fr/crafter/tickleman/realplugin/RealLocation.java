@@ -80,6 +80,30 @@ public class RealLocation extends Location
 		return location;
 	}
 
+	//--------------------------------------------------------------------------------------- compare
+	public static int compare(Location location1, Location location2)
+	{
+		if (location1.getBlockX() < location2.getBlockX()) {
+			return -1;
+		} else if (location1.getBlockX() > location2.getBlockX()) {
+			return 1;
+		} else {
+			if (location1.getBlockZ() < location2.getBlockZ()) {
+				return -1;
+			} else if (location1.getBlockZ() > location2.getBlockZ()) {
+				return 1;
+			} else {
+				if (location1.getBlockY() < location2.getBlockY()) {
+					return -1;
+				} else if (location1.getBlockY() > location2.getBlockY()) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
+		}
+	}
+
 	//------------------------------------------------------------------------------------- neightbor
 	public static Location neighbor(Location location)
 	{
