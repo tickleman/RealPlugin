@@ -1,0 +1,12 @@
+name: RealPlugin
+main: fr.crafter.tickleman.realplugin.RealPluginPlugin
+version: 1.01
+website: http://plugins.crafter.fr/tickleman/RealPlugin/
+author: tickleman
+depend: [Spout]
+softdepend: [Permissions,Register,Vault]
+commands:
+  realplugin:
+    aliases: [rp]
+    description: RealPlugin plugins manager
+    usage: /rp help
