@@ -85,7 +85,7 @@ public class RealPlugin extends JavaPlugin
 		);
 	}
 
-	//------------------------------------------------------------------------------------- opHasPerm
+	//------------------------------------------------------------------------------- opHasPermission
 	/**
 	 * Plugin developer can override this to set default op permissions
 	 * if permission system is "none"
@@ -95,7 +95,7 @@ public class RealPlugin extends JavaPlugin
 		return true;
 	}
 
-	//------------------------------------------------------------------------------------- opHasPerm
+	//--------------------------------------------------------------------------- playerHasPermission
 	/**
 	 * Plugin developer can override this to set default non-op players some permissions
 	 * if permission system is "none"
