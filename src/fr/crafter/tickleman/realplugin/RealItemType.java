@@ -234,18 +234,20 @@ public class RealItemType
 	//------------------------------------------------------------------------------ typeIdHasVariant
 	public static Boolean typeIdHasVariant(int typeId)
 	{
-		return
+		return false
 			// those codes have variant : durability is an item variant instead of damage
-			(typeId == Material.LOG.getId())
-			|| (typeId == Material.LEAVES.getId())
-			|| (typeId == Material.SAPLING.getId())
-			|| (typeId == Material.MONSTER_EGGS.getId())
-			|| (typeId == Material.WOOL.getId())
-			|| (typeId == Material.DOUBLE_STEP.getId())
-			|| (typeId == Material.STEP.getId())
-			|| (typeId == Material.COAL.getId())
-			|| (typeId == Item.INK_SACK.id)
-			|| (typeId == Item.POTION.id)
+			|| (typeId == Material.SAPLING.getId()) // 6
+			|| (typeId == Material.LOG.getId()) // 17
+			|| (typeId == Material.LEAVES.getId()) // 18
+			|| (typeId == Material.WOOL.getId()) // 35
+			|| (typeId == Material.DOUBLE_STEP.getId()) // 43
+			|| (typeId == Material.STEP.getId()) // 44
+			|| (typeId == Material.JUKEBOX.getId()) // 84
+			|| (typeId == Material.SMOOTH_BRICK.getId()) // 98
+			|| (typeId == Item.COAL.id) // 263
+			|| (typeId == Item.INK_SACK.id) // 251
+			|| (typeId == Item.POTION.id) // 373
+			|| (typeId == Material.MONSTER_EGGS.getId()) // 383
 		;
 	}
 
