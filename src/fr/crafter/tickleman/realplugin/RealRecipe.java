@@ -75,6 +75,17 @@ public class RealRecipe
 			);
 			e.printStackTrace();
 		}
+		if (recipeItems.size() == 9) {
+			int isStrange = 0;
+			for (RealItemStack recipeItem : recipeItems) {
+				if (recipeItem.getAmount() == 9) isStrange ++;
+			}
+			if (isStrange == 9) {
+				for (RealItemStack recipeItem : recipeItems) {
+					recipeItem.setAmount(1);
+				}
+			}
+		}
 	}
 
 	//------------------------------------------------------------------------------------ RealRecipe
