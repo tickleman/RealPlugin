@@ -28,6 +28,40 @@ public class RealLocation extends Location
 		super(world, x, y, z, yaw, pitch);
 	}
 
+	//----------------------------------------------------------------------------- calculateDistance
+	public static double calculateDistance(Location location1, Location location2)
+	{
+		return Math.sqrt(
+			  Math.pow(Math.abs(location1.getX() - location2.getX()), 2)
+			+ Math.pow(Math.abs(location1.getY() - location2.getY()), 2)
+			+ Math.pow(Math.abs(location1.getZ() - location2.getZ()), 2)
+		);
+	}
+
+	//--------------------------------------------------------------------------------------- compare
+	public static int compare(Location location1, Location location2)
+	{
+		if (location1.getBlockX() < location2.getBlockX()) {
+			return -1;
+		} else if (location1.getBlockX() > location2.getBlockX()) {
+			return 1;
+		} else {
+			if (location1.getBlockZ() < location2.getBlockZ()) {
+				return -1;
+			} else if (location1.getBlockZ() > location2.getBlockZ()) {
+				return 1;
+			} else {
+				if (location1.getBlockY() < location2.getBlockY()) {
+					return -1;
+				} else if (location1.getBlockY() > location2.getBlockY()) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
+		}
+	}
+
 	//----------------------------------------------------------------------------------------- getId
 	public String getId()
 	{
@@ -78,30 +112,6 @@ public class RealLocation extends Location
 			}
 		}
 		return location;
-	}
-
-	//--------------------------------------------------------------------------------------- compare
-	public static int compare(Location location1, Location location2)
-	{
-		if (location1.getBlockX() < location2.getBlockX()) {
-			return -1;
-		} else if (location1.getBlockX() > location2.getBlockX()) {
-			return 1;
-		} else {
-			if (location1.getBlockZ() < location2.getBlockZ()) {
-				return -1;
-			} else if (location1.getBlockZ() > location2.getBlockZ()) {
-				return 1;
-			} else {
-				if (location1.getBlockY() < location2.getBlockY()) {
-					return -1;
-				} else if (location1.getBlockY() > location2.getBlockY()) {
-					return 1;
-				} else {
-					return 0;
-				}
-			}
-		}
 	}
 
 	//------------------------------------------------------------------------------------- neightbor
