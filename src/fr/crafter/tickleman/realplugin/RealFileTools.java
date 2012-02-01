@@ -1,7 +1,10 @@
 package fr.crafter.tickleman.realplugin;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 
@@ -11,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class RealFileTools
 {
 
-	// ----------------------------------------------------------------------------------- deleteFile
+	//------------------------------------------------------------------------------------ deleteFile
 	public static void deleteFile(String fileName)
 	{
 		File file = new File(fileName);
@@ -20,7 +23,7 @@ public class RealFileTools
 		}
 	}
 
-	// --------------------------------------------------------------------------- extractDefaultFile
+	//---------------------------------------------------------------------------- extractDefaultFile
 	public static void extractDefaultFile(JavaPlugin plugin, String filePath)
 	{
 		String[] split = filePath.split("/");
@@ -50,13 +53,13 @@ public class RealFileTools
 		}
 	}
 
-	// ----------------------------------------------------------------------------------- fileExists
+	//------------------------------------------------------------------------------------ fileExists
 	public static boolean fileExists(String fileName)
 	{
 		return (new File(fileName)).exists();
 	}
 
-	// ---------------------------------------------------------------------------------------- mkDir
+	//----------------------------------------------------------------------------------------- mkDir
 	public static void mkDir(String dirName)
 	{
 		File dir = new File(dirName);
@@ -65,7 +68,20 @@ public class RealFileTools
 		}
 	}
 
-	// ----------------------------------------------------------------------------------- renameFile
+	//------------------------------------------------------------------------------ readFullTextFile
+	public static String readFullTextFile(String fileName) throws IOException
+	{
+		StringBuffer sb = new StringBuffer(1024);
+		BufferedReader reader = new BufferedReader(new FileReader(fileName));
+		char[] chars = new char[1024];
+		while (reader.read(chars) > -1) {
+			sb.append(String.valueOf(chars));	
+		}
+		reader.close();
+		return sb.toString();
+	}
+
+	//------------------------------------------------------------------------------------ renameFile
 	public static void renameFile(String fromFile, String toFile)
 	{
 		File from = new File(fromFile);
