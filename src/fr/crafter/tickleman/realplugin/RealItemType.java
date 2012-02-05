@@ -247,7 +247,7 @@ public class RealItemType
 			|| (typeId == Item.COAL.id) // 263
 			|| (typeId == Item.INK_SACK.id) // 251
 			|| (typeId == Item.POTION.id) // 373
-			|| (typeId == Material.MONSTER_EGGS.getId()) // 383
+			|| (typeId == Material.MONSTER_EGG.getId()) // 383
 		;
 	}
 
@@ -274,7 +274,7 @@ public class RealItemType
 			|| parseItemType.typeId == Material.LEAVES.getId()
 			|| parseItemType.typeId == Material.SAPLING.getId()
 		) {
-			short[] variants = {0, 1, 2};
+			short[] variants = {0, 1, 2, 3, 4, 5, 6, 7};
 			return variants;
 		} else if (
 			parseItemType.typeId == Material.DOUBLE_STEP.getId()
@@ -297,6 +297,13 @@ public class RealItemType
 				8233, 8196, 8260, 8228, 8200, 8264, 8202, 8266, 8204, 8236, 16384, 16385, 16449, 16417,
 				16386, 16450, 16418, 16387, 16451, 16389, 16421, 16393, 16457, 16425, 16388, 16452, 16420,
 				16392, 16456, 16394, 16458, 16396, 16428
+			};
+			return variants;
+		} else if (parseItemType.typeId == Material.MONSTER_EGG.getId()) {
+			short[] variants = {
+				50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
+				90, 91, 92, 93, 94, 95, 96, 97, 98,
+				120
 			};
 			return variants;
 		} else {
