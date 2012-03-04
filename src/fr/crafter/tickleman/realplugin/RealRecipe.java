@@ -54,7 +54,9 @@ public class RealRecipe
 				// ItemStack[]
 				for (ItemStack itemStack : (ItemStack[])recipeField.get(recipe)) {
 					if (itemStack != null) {
-						recipeItems.add(new RealItemStack(itemStack));
+						recipeItems.add(new RealItemStack(
+							itemStack.id, itemStack.count, (short)itemStack.getData()
+						));
 					}
 				}
 			} else {
@@ -64,7 +66,9 @@ public class RealRecipe
 				for (int i = 0; i < itemStackList.size(); i ++) {
 					ItemStack itemStack = itemStackList.get(i);
 					if (itemStack != null) {
-						recipeItems.add(new RealItemStack(itemStack));
+						recipeItems.add(new RealItemStack(
+							itemStack.id, itemStack.count, (short)itemStack.getData()
+						));
 					}
 				}
 			}
@@ -104,7 +108,8 @@ public class RealRecipe
 	{
 		for (int i = 1; i <= 2266; i++) {
 			if (Item.byId[i] != null) {
-				for (RealRecipe recipe : getItemRecipes(new RealItemType(Item.byId[i]))) {
+				Item item = Item.byId[i];
+				for (RealRecipe recipe : getItemRecipes(new RealItemType(item.id))) {
 					System.out.println("RECIPE " + i + " : " + recipe.toNamedString());
 				}
 			}
@@ -119,6 +124,29 @@ public class RealRecipe
 	 */
 	public static Set<RealRecipe> getItemRecipes(RealItemType realItemType)
 	{
+		// code for 1.2
+		Set<RealRecipe> itemRecipes = new HashSet<RealRecipe>();
+		for (Object recipe : CraftingManager.getInstance().getRecipies()) {
+			ItemStack itemStack = ((CraftingRecipe)recipe).b();
+			RealItemStack resultItemStack = new RealItemStack(
+				itemStack.id, itemStack.count, (short)itemStack.getData()
+			);	
+			if (realItemType.isSameItem(resultItemStack)) {
+				itemRecipes.add(new RealRecipe((CraftingRecipe)recipe, resultItemStack));
+			}
+		}
+		for (Object itemTypeId : FurnaceRecipes.getInstance().getRecipies().keySet()) {
+			ItemStack itemStack = (ItemStack)FurnaceRecipes.getInstance().getRecipies().get(itemTypeId);
+			RealItemStack recipeItemStack = new RealItemStack((Integer)itemTypeId);
+			RealItemStack resultItemStack = new RealItemStack(
+				itemStack.id, itemStack.count, (short)itemStack.getData()
+			);
+			if (realItemType.isSameItem(resultItemStack)) {
+				itemRecipes.add(new RealRecipe(recipeItemStack, resultItemStack));
+			}
+		}
+		// code for 1.1
+		/*
 		Set<RealRecipe> itemRecipes = new HashSet<RealRecipe>();
 		for (Object recipe : CraftingManager.getInstance().b()) {
 			RealItemStack resultItemStack = new RealItemStack(((CraftingRecipe)recipe).b());
@@ -135,6 +163,7 @@ public class RealRecipe
 				itemRecipes.add(new RealRecipe(recipeItemStack, resultItemStack));
 			}
 		}
+		*/
 		// TODO : here potions recipes here (must find a way)
 		/*
 		if (itemRecipes.isEmpty() && (realItemType.getTypeId() == Material.POTION.getId())) {

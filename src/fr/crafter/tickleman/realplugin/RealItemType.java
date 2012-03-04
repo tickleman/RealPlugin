@@ -37,24 +37,6 @@ public class RealItemType
 	}
 
 	//-------------------------------------------------------------------------------------- ItemType
-	public RealItemType(net.minecraft.server.ItemStack itemStack)
-	{
-		this(itemStack.id, (short)itemStack.getData());
-	}
-
-	//------------------------------------------------------------------------------------------ Item
-	public RealItemType(net.minecraft.server.Item item)
-	{
-		this(item.id, (short)0);
-	}
-
-	//------------------------------------------------------------------------------------------ Item
-	public RealItemType(net.minecraft.server.Item item, short variant)
-	{
-		this(item.id, variant);
-	}
-
-	//-------------------------------------------------------------------------------------- ItemType
 	public RealItemType(Material material)
 	{
 		this(material.getId(), (short)0);

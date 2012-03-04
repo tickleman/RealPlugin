@@ -7,13 +7,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.getspout.commons.event.Listener;
 import org.getspout.spoutapi.event.inventory.InventoryClickEvent;
 import org.getspout.spoutapi.event.inventory.InventoryCloseEvent;
-import org.getspout.spoutapi.event.inventory.InventoryListener;
 import org.getspout.spoutapi.event.inventory.InventoryOpenEvent;
 
 //########################################################################### RealInventoryListener
-public class RealInventoryListener extends InventoryListener
+public class RealInventoryListener implements Listener
 {
 
 	/** Which inventory object has clicked the player ? himself, a chest, a furnace, ... ? */
@@ -78,20 +78,16 @@ public class RealInventoryListener extends InventoryListener
 	}
 
 	//------------------------------------------------------------------------------ onInventoryClose
-	@Override
   public void onInventoryClose(InventoryCloseEvent event)
   {
-		super.onInventoryClose(event);
 		if (event.getInventory() != event.getPlayer().getInventory()) {
 			playerInventory.remove(event.getPlayer());
 		}
   }
 
 	//------------------------------------------------------------------------------- onInventoryOpen
-	@Override
 	public void onInventoryOpen(InventoryOpenEvent event)
 	{
-		super.onInventoryOpen(event);
 		if (event.getInventory() != event.getPlayer().getInventory()) {
 			playerInventory.put(event.getPlayer(), event.getInventory());
 		}

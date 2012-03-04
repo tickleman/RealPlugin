@@ -37,21 +37,6 @@ public class RealItemStack extends RealItemType
 	}
 
 	//--------------------------------------------------------------------------------- RealItemStack
-	public RealItemStack(net.minecraft.server.ItemStack itemStack)
-	{
-		// patch : replace 9 with 1 (when take blocks from recipe it gives me 9x9 instead of 9x1 !!!)
-		this(itemStack.id, itemStack.count, (short)itemStack.getData());
-		// TODO : get enchantments from itemStack (good luck friend)
-		/*
-		if (itemStack.getEnchantments() != null) {
-			for (int i = 0 ; i < itemStack.getEnchantments().size(); i ++) {
-				this.enchantments.put(itemStack.getEnchantments().get(i).)
-			}
-		}
-		*/
-	}
-
-	//--------------------------------------------------------------------------------- RealItemStack
 	public RealItemStack(int itemTypeId)
 	{
 		super(itemTypeId);

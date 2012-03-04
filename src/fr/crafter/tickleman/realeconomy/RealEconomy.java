@@ -18,7 +18,7 @@ public class RealEconomy
 	private RealPlugin        plugin;
 	private String            economyPlugin;
 	private Method            paymentMethod = null;
-  private Economy           vaultEconomy = null;
+	private Economy           vaultEconomy = null;
 
 	//----------------------------------------------------------------------------------- RealEconomy
 	public RealEconomy(RealPlugin plugin)
