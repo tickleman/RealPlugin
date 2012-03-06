@@ -3,21 +3,23 @@ package fr.crafter.tickleman.realplugin;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.entity.Player;
+import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.Event.Result;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.getspout.commons.event.Listener;
-import org.getspout.spoutapi.event.inventory.InventoryClickEvent;
-import org.getspout.spoutapi.event.inventory.InventoryCloseEvent;
-import org.getspout.spoutapi.event.inventory.InventoryOpenEvent;
 
 //########################################################################### RealInventoryListener
 public class RealInventoryListener implements Listener
 {
 
 	/** Which inventory object has clicked the player ? himself, a chest, a furnace, ... ? */
-	private Map <Player, Inventory> playerInventory = new HashMap <Player, Inventory>();
+	private Map <HumanEntity, Inventory> playerInventory = new HashMap <HumanEntity, Inventory>();
 
 	//--------------------------------------------------------------------------------- availableRoom
 	/**
@@ -48,6 +50,14 @@ public class RealInventoryListener implements Listener
 		}
 	}
 
+	//------------------------------------------------------------------------------ clickedInventory
+	public Inventory clickedInventory(InventoryClickEvent event)
+	{
+		return (event.getRawSlot() >= 0) && (event.getRawSlot() < (event.getInventory().getSize()))
+			? event.getView().getTopInventory()
+			: event.getView().getBottomInventory();
+	}
+
 	//------------------------------------------------------------------------ doWhatWillReallyBeDone
 	/**
 	 * Change the event : do only the calculated action
@@ -60,7 +70,7 @@ public class RealInventoryListener implements Listener
 		RealInventoryMove inventoryMove = whatWillReallyBeDone(event);
 		event.setResult(Result.ALLOW);
 		event.setCursor(inventoryMove.getCursor());
-		event.setItem(inventoryMove.getItem());
+		event.setCurrentItem(inventoryMove.getItem());
 		event.setCancelled(true);
 		return inventoryMove;
 	}
@@ -72,7 +82,7 @@ public class RealInventoryListener implements Listener
 	 * @param Player player
 	 * @return Inventory
 	 */
-	public Inventory insideInventory(Player player)
+	public Inventory insideInventory(HumanEntity player)
 	{
 		return playerInventory.get(player);
 	}
@@ -81,7 +91,10 @@ public class RealInventoryListener implements Listener
   public void onInventoryClose(InventoryCloseEvent event)
   {
 		if (event.getInventory() != event.getPlayer().getInventory()) {
+			//System.out.println("Player " + event.getPlayer().getName() + " exits inventory " + event.getInventory());
 			playerInventory.remove(event.getPlayer());
+		} else {
+			//System.out.println("Player exited it's own inventory");
 		}
   }
 
@@ -89,7 +102,10 @@ public class RealInventoryListener implements Listener
 	public void onInventoryOpen(InventoryOpenEvent event)
 	{
 		if (event.getInventory() != event.getPlayer().getInventory()) {
+			//System.out.println("Player " + event.getPlayer().getName() + " is inside inventory " + event.getInventory());
 			playerInventory.put(event.getPlayer(), event.getInventory());
+		} else {
+			//System.out.println("Player entered it's own inventory");
 		}
 	}
 
@@ -104,16 +120,17 @@ public class RealInventoryListener implements Listener
 	public void rightClickOnlyOne(InventoryClickEvent event)
 	{
 		if (
-			(event.getCursor() == null) && (event.getItem() != null)
+			event.getCursor().getType().equals(Material.AIR)
+			&& !event.getCurrentItem().getType().equals(Material.AIR)
 			&& !event.isLeftClick() && !event.isShiftClick()
 		) {
 			event.setResult(Result.ALLOW);
-			event.setCursor(event.getItem()/*.clone()*/);
+			event.setCursor(event.getCurrentItem()/*.clone()*/);
 			event.getCursor().setAmount(1);
-			if (event.getItem().getAmount() == 1) {
-				event.setItem(null);
+			if (event.getCurrentItem().getAmount() == 1) {
+				event.setCurrentItem(new ItemStack(Material.AIR));
 			} else {
-				event.getItem().setAmount(event.getItem().getAmount() - 1);
+				event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() - 1);
 			}
 			event.setCancelled(true);
 		}
@@ -133,50 +150,73 @@ public class RealInventoryListener implements Listener
 	 */
 	public RealInventoryMove whatWillReallyBeDone(InventoryClickEvent event)
 	{
-		ItemStack cursor = ((event.getCursor() == null) ? null : event.getCursor().clone());
-		ItemStack item   = ((event.getItem() == null) ? null : event.getItem().clone());
-		if (event.getSlot() > -999) {
+		ItemStack cursor = event.getCursor().clone();
+		ItemStack item   = event.getCurrentItem().clone();
+		if (!event.getSlotType().equals(SlotType.OUTSIDE)) {
 			if (event.isShiftClick()) {
+				//System.out.println("shift click");
 				// shift click : check if there is enough room into the destination inventory
-				if (item != null) {
+				if (!item.getType().equals(Material.AIR)) {
+					//System.out.println("shift click : check if there is enough room into the destination inventory");
+					//System.out.println("- item is not null");
 					Inventory checkInventory = event.getInventory().getName().equals("Inventory")
-						? insideInventory(event.getPlayer())
-						: event.getPlayer().getInventory();
+						? insideInventory(event.getWhoClicked())
+						: event.getWhoClicked().getInventory();
 					int room = availableRoom(checkInventory, item);
 					if (room < item.getAmount()) {
+						//System.out.println("-- room < item.getAmount()");
 						if (room > 0) {
+							//System.out.println("--- ok");
 							item.setAmount(room);
 						} else {
-							item = null;
+							//System.out.println("--- cant");
+							item = new ItemStack(Material.AIR);
 						}
 					}
-					cursor = null;
+					cursor = new ItemStack(Material.AIR);
 				}
 			} else if (event.isLeftClick()) {
+				//System.out.println("left click");
 				// left click into the same item : check if there is enough room into the destination slot
-				if ((item != null) && (cursor != null) && (item.getTypeId() == cursor.getTypeId())) {
+				if (
+					!item.getType().equals(Material.AIR)
+					&& !cursor.getType().equals(Material.AIR)
+					&& (item.getType().equals(cursor.getType()))
+				) {
+					//System.out.println("left click into the same item : check if there is enough room into the destination slot");
 					int room = Math.min(cursor.getAmount(), item.getType().getMaxStackSize() - item.getAmount());
 					if (room > 0) {
+						//System.out.println("-- room > 0 => ok");
 						cursor.setAmount(room);
 					} else {
-						cursor = null;
+						//System.out.println("-- room == 0 => cant");
+						cursor = new ItemStack(Material.AIR);
 					}
-					item = null;
+					item = new ItemStack(Material.AIR);
 				}
-			} else if ((item == null) && (cursor != null)) {
+			} else if (item.getType().equals(Material.AIR) && !cursor.getType().equals(Material.AIR)) {
+				//System.out.println("right click on an empty slot : cursor 1");
 				// right click on an empty slot : cursor 1
 				cursor.setAmount(1);
-			} else if ((item != null) && (cursor == null)) {
+			} else if (cursor.getType().equals(Material.AIR) && !item.getType().equals(Material.AIR)) {
+				//System.out.println("right click to item from slot : item 50%");
 				// right click to item from slot : item 50%
 				item.setAmount((int)Math.ceil(item.getAmount() / 2.0));
-			} else if ((item != null) && (cursor != null) && (item.getTypeId() == cursor.getTypeId())) {
+			} else if (
+				!item.getType().equals(Material.AIR)
+				&& !cursor.getType().equals(Material.AIR)
+				&& (item.getType().equals(cursor.getType()))
+			) {
+				//System.out.println("right click into the same item : check if there is enough room into the destination slot to cursor 1");
 				// right click into the same item : check if there is enough room into the destination slot to cursor 1
 				if (item.getType().getMaxStackSize() > item.getAmount()) {
+					//System.out.println("- getmaxstacksize > item.getamount => setamount(1)");
 					cursor.setAmount(1);
 				} else {
-					cursor = null;
+					//System.out.println("- getmaxstacksize <= item.getamount => cant");
+					cursor = new ItemStack(Material.AIR);
 				}
-				item = null;
+				item = new ItemStack(Material.AIR);
 			}
 		}
 		return new RealInventoryMove(cursor, item);
