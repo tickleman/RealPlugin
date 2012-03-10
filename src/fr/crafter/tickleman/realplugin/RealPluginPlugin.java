@@ -79,7 +79,10 @@ public class RealPluginPlugin extends JavaPlugin
 					}
 				}
 				if (args.length == 2) {
-					if (args[0].equalsIgnoreCase("download") || args[0].equalsIgnoreCase("dl")) {
+					if (
+						args[0].equalsIgnoreCase("download") || args[0].equalsIgnoreCase("dl")
+						|| args[0].equalsIgnoreCase("update") || args[0].equalsIgnoreCase("upd")
+					) {
 						// /realplugin download <plugin>
 						if (download(args[1])) {
 							sender.sendMessage(
