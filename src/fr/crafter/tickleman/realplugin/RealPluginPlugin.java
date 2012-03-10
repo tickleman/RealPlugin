@@ -117,24 +117,12 @@ public class RealPluginPlugin extends JavaPlugin
 	@Override
 	public void onDisable()
 	{
-		/*
-		System.out.println(
-			"[RealPlugin] version [" + getDescription().getVersion() + "] ("
-			+ getDescription().getAuthors().toString().replace("[", "").replace("]", "") + ") unloaded"
-		);
-		*/
 	}
 
 	//-------------------------------------------------------------------------------------- onEnable
 	@Override
 	public void onEnable()
 	{
-		/*
-		System.out.println(
-			"[RealPlugin] version [" + getDescription().getVersion() + "] ("
-			+ getDescription().getAuthors().toString().replace("[", "").replace("]", "") + ") loaded"
-		);
-		*/
 	}
 
 }
