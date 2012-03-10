@@ -19,6 +19,8 @@ public class RealEconomy
 	private String            economyPlugin;
 	private Method            paymentMethod = null;
 	private Economy           vaultEconomy = null;
+	private boolean registerEnabled = false;
+	private boolean vaultEnabled = false;
 
 	//----------------------------------------------------------------------------------- RealEconomy
 	public RealEconomy(RealPlugin plugin)
@@ -28,6 +30,18 @@ public class RealEconomy
 		accounts = new RealAccounts(plugin);
 		config = new RealEconomyConfig(plugin);
 		config.load();
+	}
+
+	//------------------------------------------------------------------------------- disableRegister
+	public void disableRegister()
+	{
+		setPaymentMethod(null);
+	}
+
+	//---------------------------------------------------------------------------------- disableVault
+	public void disableVault()
+	{
+		vaultEnabled = false;
 	}
 
 	//---------------------------------------------------------------------------------------- format
@@ -67,18 +81,6 @@ public class RealEconomy
 		}
 	}
 
-	//------------------------------------------------------------------------------------ hasAccount
-	public boolean hasAccount(String playerName)
-	{
-		if (economyPlugin.equals("Vault")) {
-			return vaultEconomy.getBalance(playerName) > 0;
-		} else if (economyPlugin.equals("Register")) {
-			return paymentMethod.hasAccount(playerName);
-		} else {
-			return (accounts.getBalance(playerName) != null);
-		}
-	}
-
 	//----------------------------------------------------------------------------------- getCurrency
 	public String getCurrency()
 	{
@@ -91,19 +93,33 @@ public class RealEconomy
 		return economyPlugin;
 	}
 
+	//------------------------------------------------------------------------------------ hasAccount
+	public boolean hasAccount(String playerName)
+	{
+		if (economyPlugin.equals("Vault")) {
+			return vaultEconomy.getBalance(playerName) > 0;
+		} else if (economyPlugin.equals("Register")) {
+			return paymentMethod.hasAccount(playerName);
+		} else {
+			return (accounts.getBalance(playerName) != null);
+		}
+	}
+
 	//---------------------------------------------------------------------------------- initRegister
 	public void initRegister()
 	{
-		if (plugin.getServer().getPluginManager().getPlugin("Register") != null) {
-			if (!Methods.hasMethod()) {
-				if (Methods.setMethod(plugin.getServer().getPluginManager())) {
-					Method method = Methods.getMethod();
-					if (method != null) {
-						setPaymentMethod(method);
-						plugin.getLog().info(
-							"Payment method " + method.getName() + " version " + method.getVersion()
-							+ " enabled (Register)"
-						);
+		if (!registerEnabled) {
+			if (plugin.getServer().getPluginManager().getPlugin("Register") != null) {
+				if (!Methods.hasMethod()) {
+					if (Methods.setMethod(plugin.getServer().getPluginManager())) {
+						Method method = Methods.getMethod();
+						if (method != null) {
+							setPaymentMethod(method);
+							plugin.getLog().info(
+								"Payment method " + method.getName() + " version " + method.getVersion()
+								+ " enabled (Register)"
+							);
+						}
 					}
 				}
 			}
@@ -113,18 +129,21 @@ public class RealEconomy
 	//------------------------------------------------------------------------------------- initVault
 	public void initVault()
 	{
-		if (plugin.getServer().getPluginManager().getPlugin("Vault") != null) {
-			RegisteredServiceProvider<Economy> economyProvider
-				= plugin.getServer().getServicesManager().getRegistration(
-					net.milkbowl.vault.economy.Economy.class
-				);
-			if (economyProvider != null) {
-				vaultEconomy = economyProvider.getProvider();
-				if (vaultEconomy != null) {
-					economyPlugin = "Vault";
-					plugin.getLog().info(
-						"Economy provider " + vaultEconomy.getName() + " enabled (Vault)"
+		if (!vaultEnabled) {
+			if (plugin.getServer().getPluginManager().getPlugin("Vault") != null) {
+				RegisteredServiceProvider<Economy> economyProvider
+					= plugin.getServer().getServicesManager().getRegistration(
+						net.milkbowl.vault.economy.Economy.class
 					);
+				if (economyProvider != null) {
+					vaultEconomy = economyProvider.getProvider();
+					if (vaultEconomy != null) {
+						economyPlugin = "Vault";
+						plugin.getLog().info(
+							"Economy provider " + vaultEconomy.getName() + " enabled (Vault)"
+						);
+						vaultEnabled = true;
+					}
 				}
 			}
 		}
@@ -152,6 +171,11 @@ public class RealEconomy
 	{
 		economyPlugin = "Register";
 		this.paymentMethod = paymentMethod;
+		if (paymentMethod == null) {
+			registerEnabled = false;
+		} else {
+			registerEnabled = true;
+		}
 	}
 
 	//-------------------------------------------------------------------------------------- transfer

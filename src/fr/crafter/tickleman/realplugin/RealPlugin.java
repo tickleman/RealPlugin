@@ -55,15 +55,6 @@ public class RealPlugin extends JavaPlugin
 	@Override
 	public void onDisable()
 	{
-		// disabled
-		if (log != null) {
-			getLog().info(
-				"version [" + getDescription().getVersion() + "] ("
-				+ getDescription().getAuthors().toString().replace("[", "").replace("]", "")
-				+ ") un-loaded",
-				true
-			);
-		}
 		// disable associated objects
 		config = null;
 		log    = null;
@@ -77,12 +68,6 @@ public class RealPlugin extends JavaPlugin
 	{
 		getDataFolder().mkdirs();
 		reload();
-		getLog().info(
-			"version [" + getDescription().getVersion() + "] ("
-			+ getDescription().getAuthors().toString().replace("[", "").replace("]", "")
-			+ ") loaded",
-			true
-		);
 	}
 
 	//------------------------------------------------------------------------------- opHasPermission
