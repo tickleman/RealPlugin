@@ -70,6 +70,7 @@ public class RealConfig
 			BufferedReader reader = new BufferedReader(new FileReader(fileName));
 			String buffer;
 			while ((buffer = reader.readLine()) != null) {
+				buffer = buffer.replace("\r", "");
 				if (buffer.charAt(0) != '#') {
 					String[] line = buffer.split("=");
 					if (line.length >= 2) {
