@@ -63,6 +63,19 @@ public class RealItemStack extends RealItemType
 		}
 	}
 
+	//-------------------------------------------------------------------------------- cloneItemStack
+	public static ItemStack cloneItem(ItemStack itemStack)
+	{
+		ItemStack newItemStack = new ItemStack(
+			itemStack.getType(), itemStack.getAmount(), itemStack.getDurability(),
+			itemStack.getData().getData()
+		);
+		if (newItemStack.getEnchantments() != null) {
+			newItemStack.addEnchantments(newItemStack.getEnchantments());
+		}
+		return newItemStack;
+	}
+
 	//---------------------------------------------------------------------------------------- create
 	public static RealItemStack create(ItemStack itemStack)
 	{
