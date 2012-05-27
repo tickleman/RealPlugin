@@ -1,5 +1,6 @@
 package fr.crafter.tickleman.realplugin;
 
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -11,6 +12,19 @@ public class RealPlugin extends JavaPlugin
 	private   RealTranslation lang   = null;
 	private   RealLog         log    = null;
 	private   RealPermissions perms  = null;
+	private static Server server;
+
+	//---------------------------------------------------------------------------------------- getLog
+	public RealLog getLog()
+	{
+		return log;
+	}
+
+	//-------------------------------------------------------------------------------- getPermissions
+	public RealPermissions getPermissions()
+	{
+		return perms;
+	}
 
 	//--------------------------------------------------------------------------------- getRealConfig
 	/**
@@ -24,16 +38,10 @@ public class RealPlugin extends JavaPlugin
 		return config;
 	}
 
-	//---------------------------------------------------------------------------------------- getLog
-	public RealLog getLog()
+	//--------------------------------------------------------------------------------- getRealServer
+	public static Server getRealServer()
 	{
-		return log;
-	}
-
-	//-------------------------------------------------------------------------------- getPermissions
-	public RealPermissions getPermissions()
-	{
-		return perms;
+		return server;
 	}
 
 	//--------------------------------------------------------------------------------- hasPermission
@@ -66,6 +74,7 @@ public class RealPlugin extends JavaPlugin
 	@Override
 	public void onEnable()
 	{
+		server = getServer();
 		getDataFolder().mkdirs();
 		reload();
 	}

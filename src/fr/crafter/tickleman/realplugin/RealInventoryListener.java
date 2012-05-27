@@ -91,10 +91,7 @@ public class RealInventoryListener implements Listener
   public void onInventoryClose(InventoryCloseEvent event)
   {
 		if (event.getInventory() != event.getPlayer().getInventory()) {
-			//System.out.println("Player " + event.getPlayer().getName() + " exits inventory " + event.getInventory());
 			playerInventory.remove(event.getPlayer());
-		} else {
-			//System.out.println("Player exited it's own inventory");
 		}
   }
 
@@ -102,10 +99,7 @@ public class RealInventoryListener implements Listener
 	public void onInventoryOpen(InventoryOpenEvent event)
 	{
 		if (event.getInventory() != event.getPlayer().getInventory()) {
-			//System.out.println("Player " + event.getPlayer().getName() + " is inside inventory " + event.getInventory());
 			playerInventory.put(event.getPlayer(), event.getInventory());
-		} else {
-			//System.out.println("Player entered it's own inventory");
 		}
 	}
 
