@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.server.CraftingManager;
-import net.minecraft.server.CraftingRecipe;
-import net.minecraft.server.FurnaceRecipes;
+import net.minecraft.server.IRecipe;
 import net.minecraft.server.Item;
 import net.minecraft.server.ItemStack;
+import net.minecraft.server.RecipesFurnace;
 
 //##################################################################################### RealRecipes
 public class RealRecipe
@@ -34,7 +34,7 @@ public class RealRecipe
 	/**
 	 * Generate a easily usable recipe, based on Minecraft's crafting recipe
 	 */
-	public RealRecipe(CraftingRecipe recipe, RealItemStack resultItem)
+	public RealRecipe(IRecipe recipe, RealItemStack resultItem)
 	{
 		this.resultItem = resultItem;
 		// recipeField
@@ -54,9 +54,7 @@ public class RealRecipe
 				// ItemStack[]
 				for (ItemStack itemStack : (ItemStack[])recipeField.get(recipe)) {
 					if (itemStack != null) {
-						recipeItems.add(new RealItemStack(
-							itemStack.id, itemStack.count, (short)itemStack.getData()
-						));
+						recipeItems.add(new RealItemStack(itemStack));
 					}
 				}
 			} else {
@@ -66,9 +64,7 @@ public class RealRecipe
 				for (int i = 0; i < itemStackList.size(); i ++) {
 					ItemStack itemStack = itemStackList.get(i);
 					if (itemStack != null) {
-						recipeItems.add(new RealItemStack(
-							itemStack.id, itemStack.count, (short)itemStack.getData()
-						));
+						recipeItems.add(new RealItemStack(itemStack));
 					}
 				}
 			}
@@ -124,46 +120,22 @@ public class RealRecipe
 	 */
 	public static Set<RealRecipe> getItemRecipes(RealItemType realItemType)
 	{
-		// code for 1.2
 		Set<RealRecipe> itemRecipes = new HashSet<RealRecipe>();
-		for (Object recipe : CraftingManager.getInstance().getRecipies()) {
-			ItemStack itemStack = ((CraftingRecipe)recipe).b();
-			RealItemStack resultItemStack = new RealItemStack(
-				itemStack.id, itemStack.count, (short)itemStack.getData()
-			);	
+		for (Object recipe : CraftingManager.getInstance().getRecipes()) {
+			net.minecraft.server.ItemStack itemStack = ((IRecipe)recipe).b();
+			RealItemStack resultItemStack = new RealItemStack(itemStack);	
 			if (realItemType.isSameItem(resultItemStack)) {
-				itemRecipes.add(new RealRecipe((CraftingRecipe)recipe, resultItemStack));
+				itemRecipes.add(new RealRecipe((IRecipe)recipe, resultItemStack));
 			}
 		}
-		for (Object itemTypeId : FurnaceRecipes.getInstance().getRecipies().keySet()) {
-			ItemStack itemStack = (ItemStack)FurnaceRecipes.getInstance().getRecipies().get(itemTypeId);
-			RealItemStack recipeItemStack = new RealItemStack((Integer)itemTypeId);
-			RealItemStack resultItemStack = new RealItemStack(
-				itemStack.id, itemStack.count, (short)itemStack.getData()
-			);
+		for (Object itemTypeId : RecipesFurnace.getInstance().getRecipes().keySet()) {
+			ItemStack itemStack = (ItemStack)RecipesFurnace.getInstance().getRecipes().get(itemTypeId);
+			RealItemStack resultItemStack = new RealItemStack((Integer)itemTypeId);
+			RealItemStack recipeItemStack = new RealItemStack(itemStack);
 			if (realItemType.isSameItem(resultItemStack)) {
 				itemRecipes.add(new RealRecipe(recipeItemStack, resultItemStack));
 			}
 		}
-		// code for 1.1
-		/*
-		Set<RealRecipe> itemRecipes = new HashSet<RealRecipe>();
-		for (Object recipe : CraftingManager.getInstance().b()) {
-			RealItemStack resultItemStack = new RealItemStack(((CraftingRecipe)recipe).b());
-			if (realItemType.isSameItem(resultItemStack)) {
-				itemRecipes.add(new RealRecipe((CraftingRecipe)recipe, resultItemStack));
-			}
-		}
-		for (Object itemTypeId : FurnaceRecipes.getInstance().b().keySet()) {
-			RealItemStack recipeItemStack = new RealItemStack((Integer)itemTypeId);
-			RealItemStack resultItemStack = new RealItemStack(
-				(ItemStack)FurnaceRecipes.getInstance().b().get(itemTypeId)
-			);
-			if (realItemType.isSameItem(resultItemStack)) {
-				itemRecipes.add(new RealRecipe(recipeItemStack, resultItemStack));
-			}
-		}
-		*/
 		// TODO : here potions recipes here (must find a way)
 		/*
 		if (itemRecipes.isEmpty() && (realItemType.getTypeId() == Material.POTION.getId())) {

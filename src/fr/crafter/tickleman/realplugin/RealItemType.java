@@ -1,5 +1,6 @@
 package fr.crafter.tickleman.realplugin;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import net.minecraft.server.Block;
@@ -218,16 +219,20 @@ public class RealItemType
 	{
 		return false
 			// those codes have variant : durability is an item variant instead of damage
+			|| (typeId == Material.WOOD.getId()) // 5
 			|| (typeId == Material.SAPLING.getId()) // 6
 			|| (typeId == Material.LOG.getId()) // 17
 			|| (typeId == Material.LEAVES.getId()) // 18
+			|| (typeId == Material.LONG_GRASS.getId()) // 31
 			|| (typeId == Material.WOOL.getId()) // 35
 			|| (typeId == Material.DOUBLE_STEP.getId()) // 43
 			|| (typeId == Material.STEP.getId()) // 44
 			|| (typeId == Material.JUKEBOX.getId()) // 84
 			|| (typeId == Material.SMOOTH_BRICK.getId()) // 98
+			|| (typeId == Material.WOOD_DOUBLE_STEP.getId()) // 125
+			|| (typeId == Material.WOOD_STEP.getId()) // 126
 			|| (typeId == Item.COAL.id) // 263
-			|| (typeId == Item.INK_SACK.id) // 251
+			|| (typeId == Item.INK_SACK.id) // 351
 			|| (typeId == Item.POTION.id) // 373
 			|| (typeId == Material.MONSTER_EGG.getId()) // 383
 		;
@@ -242,7 +247,19 @@ public class RealItemType
 			// this could be easily broken on craftbukkit's next updates,
 			// but I mean that blocks are never traded with a damage value, as they are
 			// damaged only when you hit them, and are never damaged when in inventories
-			return (short)Block.byId[typeId].c();
+			try {
+				Field strength = Block.class.getField("durability");
+				if (!strength.isAccessible()) {
+					strength.setAccessible(true);
+				}
+				return (short) Math.round(strength.getDouble(Block.byId[typeId]));
+			} catch (IllegalArgumentException e) {
+			} catch (SecurityException e) {
+			} catch (IllegalAccessException e) {
+			} catch (NoSuchFieldException e) {
+			}
+			System.out.println("default damage 128 for item id " + typeId);
+			return 128;
 		} else {
 			return (short)Item.byId[typeId].getMaxDurability();
 		}
