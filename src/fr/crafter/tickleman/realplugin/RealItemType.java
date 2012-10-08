@@ -229,12 +229,16 @@ public class RealItemType
 			|| (typeId == Material.STEP.getId()) // 44
 			|| (typeId == Material.JUKEBOX.getId()) // 84
 			|| (typeId == Material.SMOOTH_BRICK.getId()) // 98
+			|| (typeId == Material.HUGE_MUSHROOM_1.getId()) // 99
+			|| (typeId == Material.HUGE_MUSHROOM_2.getId()) // 100
 			|| (typeId == Material.WOOD_DOUBLE_STEP.getId()) // 125
 			|| (typeId == Material.WOOD_STEP.getId()) // 126
 			|| (typeId == Item.COAL.id) // 263
 			|| (typeId == Item.INK_SACK.id) // 351
+			|| (typeId == Item.MAP.id) // 358
 			|| (typeId == Item.POTION.id) // 373
 			|| (typeId == Material.MONSTER_EGG.getId()) // 383
+			|| (typeId == Item.BOOK_AND_QUILL.id) // 386
 		;
 	}
 
