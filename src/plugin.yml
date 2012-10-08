@@ -1,6 +1,6 @@
 name: RealPlugin
 main: fr.crafter.tickleman.realplugin.RealPluginPlugin
-version: 1.2
+version: 1.21
 website: http://plugins.crafter.fr/tickleman/RealPlugin/
 author: tickleman
 load: STARTUP
