@@ -130,8 +130,8 @@ public class RealRecipe
 		}
 		for (Object itemTypeId : RecipesFurnace.getInstance().getRecipes().keySet()) {
 			ItemStack itemStack = (ItemStack)RecipesFurnace.getInstance().getRecipes().get(itemTypeId);
-			RealItemStack resultItemStack = new RealItemStack((Integer)itemTypeId);
-			RealItemStack recipeItemStack = new RealItemStack(itemStack);
+			RealItemStack resultItemStack = new RealItemStack(itemStack);
+			RealItemStack recipeItemStack = new RealItemStack((Integer)itemTypeId);
 			if (realItemType.isSameItem(resultItemStack)) {
 				itemRecipes.add(new RealRecipe(recipeItemStack, resultItemStack));
 			}
