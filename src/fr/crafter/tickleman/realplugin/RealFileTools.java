@@ -1,11 +1,14 @@
 package fr.crafter.tickleman.realplugin;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.logging.Level;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,6 +17,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class RealFileTools
 {
 
+	public static int httpTimeout = 1000;
+
 	//------------------------------------------------------------------------------------ deleteFile
 	public static void deleteFile(String fileName)
 	{
@@ -21,6 +26,42 @@ public class RealFileTools
 		if (file.exists()) {
 			file.delete();
 		}
+	}
+
+	//---------------------------------------------------------------------------------- downloadFile
+	public static boolean downloadFile(String url, String filename)
+	{
+		try {
+			URLConnection connection = new URL(url).openConnection();
+			connection.setReadTimeout(httpTimeout);
+			connection.setUseCaches(false);
+			InputStream input = connection.getInputStream();
+			try {
+				DataOutputStream output = new DataOutputStream(
+					new FileOutputStream(new File(filename + ".tmp"))
+				);
+				try {
+					byte[] buffer = new byte[10240];
+					int size;
+					while ((size = input.read(buffer)) > 0) {
+						output.write(buffer, 0, size);
+					}
+					output.close();
+					deleteFile(filename);
+					renameFile(filename + ".tmp", filename);
+					return true;
+				} catch (IOException e) {
+					output.close();
+					deleteFile(filename + ".tmp");
+				}
+			} catch (IOException e) {
+				deleteFile(filename + ".tmp");
+			}
+			input.close();
+		} catch (Exception e) {
+			deleteFile(filename + ".tmp");
+		}
+		return false;
 	}
 
 	//---------------------------------------------------------------------------- extractDefaultFile
@@ -53,6 +94,27 @@ public class RealFileTools
 		}
 	}
 
+	//------------------------------------------------------------------------------- getFileContents
+	public static String getFileContents(String filename) throws IOException
+	{
+		if (filename.substring(0, 4).equals("http") && filename.contains(":/")) {
+			if (downloadFile(filename, "download.tmp")) {
+				return readFullTextFile("download.tmp");
+			} else {
+				return "";
+			}
+		} else {
+			BufferedReader reader = new BufferedReader(new FileReader(filename));
+			StringBuilder buffer = new StringBuilder();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				buffer.append(line);
+			}
+			reader.close();
+			return buffer.toString();
+		}
+	}
+
 	//------------------------------------------------------------------------------------ fileExists
 	public static boolean fileExists(String fileName)
 	{
@@ -71,9 +133,9 @@ public class RealFileTools
 	//------------------------------------------------------------------------------ readFullTextFile
 	public static String readFullTextFile(String fileName) throws IOException
 	{
-		StringBuffer sb = new StringBuffer(1024);
+		StringBuffer sb = new StringBuffer(10240);
 		BufferedReader reader = new BufferedReader(new FileReader(fileName));
-		char[] chars = new char[1024];
+		char[] chars = new char[10240];
 		while (reader.read(chars) > -1) {
 			sb.append(String.valueOf(chars));	
 		}

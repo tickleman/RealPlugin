@@ -1,11 +1,7 @@
 package fr.crafter.tickleman.realplugin;
 
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.IOException;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -29,37 +25,46 @@ public class RealPluginPlugin extends JavaPlugin
 	//-------------------------------------------------------------------------------------- download
 	public boolean download(String plugin, String version)
 	{
-		String url = "http://plugins.crafter.fr/depot/tickleman/" + plugin
-			+ "/" + version + "/" + plugin + ".jar";
+		boolean result = false;
+		int bakTimeout = RealFileTools.httpTimeout;
+		RealFileTools.httpTimeout = 10000;
+		String urlplugin = plugin.toLowerCase().replace("realshop2", "realshop");
+		String url = null;
+		String buffer = "";
 		try {
-			URLConnection connection = new URL(url).openConnection();
-			connection.setReadTimeout(1000);
-			connection.setUseCaches(false);
-			InputStream input = connection.getInputStream();
-			try {
-				DataOutputStream output = new DataOutputStream(
-					new FileOutputStream(new File("plugins/" + plugin + ".jar.tmp"))
-				);
-				try {
-					byte[] buffer = new byte[10240];
-					int size;
-					while ((size = input.read(buffer)) > 0) {
-						output.write(buffer, 0, size);
-					}
-					output.close();
-					RealFileTools.deleteFile("plugins/" + plugin + ".jar");
-					RealFileTools.renameFile("plugins/" + plugin + ".jar.tmp", "plugins/" + plugin + ".jar");
-					return true;
-				} catch (Exception e) {
-					output.close();
-					RealFileTools.deleteFile("plugins/" + plugin + ".jar.tmp");
-				}
-			} catch (Exception e) {
-			}
-			input.close();
-		} catch (Exception e) {
+			buffer = RealFileTools.getFileContents(
+				"http://dev.bukkit.org/server-mods/" + urlplugin + "/files"
+			);
+		} catch (IOException e) {
 		}
-		return false;
+		String[] filesBuffer = buffer.toLowerCase().split("<td class=\"col-file\">");
+		for (int i = 1; i < filesBuffer.length; i++) {
+			String fileBuffer = filesBuffer[i];
+			String fileVersion = fileBuffer.split(">" + urlplugin + " v")[1].split("<")[0];
+			if ((fileVersion == version) || (version == "release")) {
+				String fileUrl = "http://dev.bukkit.org"
+					+ fileBuffer.split("<a href=\"")[1].split("\">")[0];
+				fileBuffer = "";
+				try {
+					fileBuffer = RealFileTools.getFileContents(fileUrl);
+				} catch (IOException e) {
+				}
+				if (
+					fileBuffer.contains("<li class=\"user-action user-action-download\">")
+					&& fileBuffer.contains("<a href=\"")
+				) {
+					fileUrl = fileBuffer.split("<li class=\"user-action user-action-download\">")[1]
+						.split("<a href=\"")[1].split("\">")[0];
+					url = fileUrl;
+				}
+				break;
+			}
+		}
+		if ((url != null) && RealFileTools.downloadFile(url, "plugins/" + plugin + ".jar")) {
+			result = true;
+		}
+		RealFileTools.httpTimeout = bakTimeout;
+		return result;
 	}
 
 	//------------------------------------------------------------------------------------- onCommand
