@@ -1,10 +1,12 @@
 package fr.crafter.tickleman.realplugin;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -108,7 +110,7 @@ public class RealFileTools
 			StringBuilder buffer = new StringBuilder();
 			String line;
 			while ((line = reader.readLine()) != null) {
-				buffer.append(line);
+				buffer.append(line + "\n");
 			}
 			reader.close();
 			return buffer.toString();
@@ -151,6 +153,14 @@ public class RealFileTools
 		if (from.exists() && !to.exists()) {
 			from.renameTo(to);
 		}
+	}
+
+	//-------------------------------------------------------------------------------- setFileContent
+	public static void setFileContent(String fileName, String content) throws IOException
+	{
+		BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+		writer.write(content);
+		writer.close();
 	}
 
 }

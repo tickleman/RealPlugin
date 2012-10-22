@@ -19,7 +19,7 @@ public class RealConfig
 
 	public  boolean    debug = false;
 	public  String     language = "en"; 
-	public  String     permissionsPlugin = "none";
+	public  String     permissionsPlugin = "bukkit";
 	private JavaPlugin plugin;
 	public  boolean    pluginLog = false;
 
