@@ -7,6 +7,5 @@
 	<classpathentry kind="lib" path="C:/Minespace/libraries/Permissions.jar"/>
 	<classpathentry kind="lib" path="C:/Minespace/libraries/Register.jar"/>
 	<classpathentry kind="lib" path="C:/Minespace/libraries/Essentials.jar"/>
-	<classpathentry kind="lib" path="C:/Minespace/libraries/bukkit.jar" sourcepath="/Bukkit/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

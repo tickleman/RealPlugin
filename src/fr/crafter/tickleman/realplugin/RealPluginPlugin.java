@@ -73,6 +73,18 @@ public class RealPluginPlugin extends JavaPlugin
 	{
 		if (sender.isOp()) {
 			String command = cmd.getName().toLowerCase();
+			if (command.equals("realrecipes") || command.equals("rr")) {
+				if ((args.length == 1) && (args[0].equals("dump") || args[0].equals("d"))) {
+					sender.sendMessage("Recipes dumped on console");
+					RealRecipe.dumpAllRecipes();
+					return true;
+				}
+				if ((args.length == 2) && (args[0].equals("dump") || args[0].equals("d"))) {
+					sender.sendMessage("Recipes dumped on console for item " + args[1]);
+					RealRecipe.dumpAllRecipes(Integer.parseInt(args[1]));
+					return true;
+				}
+			}
 			if (command.equals("realplugin") || command.equals("rp")) {
 				if (args.length == 3) {
 					if (args[0].equalsIgnoreCase("download") || args[0].equalsIgnoreCase("dl")) {

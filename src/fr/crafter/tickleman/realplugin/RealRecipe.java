@@ -94,6 +94,8 @@ public class RealRecipe
 	 */
 	public RealRecipe(RealItemStack recipeItemStack, RealItemStack resultItem)
 	{
+		resultItem.setAmount(8);
+		recipeItemStack.setAmount(8);
 		this.resultItem = resultItem;
 		this.recipeItems.add(new RealItemStack(Item.COAL.id));
 		this.recipeItems.add(recipeItemStack);
@@ -102,8 +104,14 @@ public class RealRecipe
 	//-------------------------------------------------------------------------------- dumpAllRecipes
 	public static void dumpAllRecipes()
 	{
-		for (int i = 1; i <= 2266; i++) {
-			if (Item.byId[i] != null) {
+		dumpAllRecipes(null);
+	}
+
+	//-------------------------------------------------------------------------------- dumpAllRecipes
+	public static void dumpAllRecipes(Integer itemId)
+	{
+		for (int i = 1; i <= 2500; i++) {
+			if ((Item.byId[i] != null) && ((itemId == null) || (itemId == i))) {
 				Item item = Item.byId[i];
 				for (RealRecipe recipe : getItemRecipes(new RealItemType(item.id))) {
 					System.out.println("RECIPE " + i + " : " + recipe.toNamedString());
@@ -123,17 +131,21 @@ public class RealRecipe
 		Set<RealRecipe> itemRecipes = new HashSet<RealRecipe>();
 		for (Object recipe : CraftingManager.getInstance().getRecipes()) {
 			net.minecraft.server.ItemStack itemStack = ((IRecipe)recipe).b();
-			RealItemStack resultItemStack = new RealItemStack(itemStack);	
-			if (realItemType.isSameItem(resultItemStack)) {
-				itemRecipes.add(new RealRecipe((IRecipe)recipe, resultItemStack));
+			if (itemStack != null) {
+				RealItemStack resultItemStack = new RealItemStack(itemStack);	
+				if (realItemType.isSameItem(resultItemStack)) {
+					itemRecipes.add(new RealRecipe((IRecipe)recipe, resultItemStack));
+				}
 			}
 		}
 		for (Object itemTypeId : RecipesFurnace.getInstance().getRecipes().keySet()) {
 			ItemStack itemStack = (ItemStack)RecipesFurnace.getInstance().getRecipes().get(itemTypeId);
-			RealItemStack resultItemStack = new RealItemStack(itemStack);
-			RealItemStack recipeItemStack = new RealItemStack((Integer)itemTypeId);
-			if (realItemType.isSameItem(resultItemStack)) {
-				itemRecipes.add(new RealRecipe(recipeItemStack, resultItemStack));
+			if (itemStack != null) {
+				RealItemStack resultItemStack = new RealItemStack(itemStack);
+				RealItemStack recipeItemStack = new RealItemStack((Integer)itemTypeId);
+				if (realItemType.isSameItem(resultItemStack)) {
+					itemRecipes.add(new RealRecipe(recipeItemStack, resultItemStack));
+				}
 			}
 		}
 		// TODO : here potions recipes here (must find a way)
