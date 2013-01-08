@@ -9,7 +9,7 @@ public class RealEnchantment
 	//-------------------------------------------------------------------------- getEnchantmentWeight
 	public static int getEnchantmentWeight(Enchantment enchantment)
 	{
-		return net.minecraft.server.Enchantment.byId[enchantment.getId()].getRandomWeight();
+		return net.minecraft.server.v1_4_6.Enchantment.byId[enchantment.getId()].getRandomWeight();
 	}
 
 }
