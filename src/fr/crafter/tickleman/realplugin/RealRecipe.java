@@ -5,11 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.server.v1_4_R1.CraftingManager;
-import net.minecraft.server.v1_4_R1.IRecipe;
-import net.minecraft.server.v1_4_R1.Item;
-import net.minecraft.server.v1_4_R1.ItemStack;
-import net.minecraft.server.v1_4_R1.RecipesFurnace;
+import net.minecraft.server.v1_5_R3.CraftingManager;
+import net.minecraft.server.v1_5_R3.IRecipe;
+import net.minecraft.server.v1_5_R3.Item;
+import net.minecraft.server.v1_5_R3.ItemStack;
+import net.minecraft.server.v1_5_R3.RecipesFurnace;
 
 //##################################################################################### RealRecipes
 public class RealRecipe
@@ -130,7 +130,7 @@ public class RealRecipe
 	{
 		Set<RealRecipe> itemRecipes = new HashSet<RealRecipe>();
 		for (Object recipe : CraftingManager.getInstance().getRecipes()) {
-			net.minecraft.server.v1_4_R1.ItemStack itemStack = ((IRecipe)recipe).b();
+			net.minecraft.server.v1_5_R3.ItemStack itemStack = ((IRecipe)recipe).b();
 			if (itemStack != null) {
 				RealItemStack resultItemStack = new RealItemStack(itemStack);	
 				if (realItemType.isSameItem(resultItemStack)) {
