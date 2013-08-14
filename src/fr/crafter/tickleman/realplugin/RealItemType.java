@@ -3,8 +3,8 @@ package fr.crafter.tickleman.realplugin;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import net.minecraft.server.v1_5_R3.Block;
-import net.minecraft.server.v1_5_R3.Item;
+import net.minecraft.server.v1_6_R2.Block;
+import net.minecraft.server.v1_6_R2.Item;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
