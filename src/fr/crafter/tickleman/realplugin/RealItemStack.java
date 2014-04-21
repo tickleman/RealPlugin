@@ -37,9 +37,10 @@ public class RealItemStack extends RealItemType
 	}
 
 	//--------------------------------------------------------------------------------- RealItemStack
-	public RealItemStack(net.minecraft.server.v1_6_R3.ItemStack itemStack)
+	public RealItemStack(net.minecraft.server.v1_7_R1.ItemStack itemStack)
 	{
-		this(itemStack.id, itemStack.count, (short) itemStack.getData());
+		// TODO Check if c() is the real replacement for id
+		this(itemStack.getItem().c(), itemStack.count, (short) itemStack.getData());
 	}
 
 	//--------------------------------------------------------------------------------- RealItemStack

@@ -5,11 +5,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.server.v1_6_R3.CraftingManager;
-import net.minecraft.server.v1_6_R3.IRecipe;
-import net.minecraft.server.v1_6_R3.Item;
-import net.minecraft.server.v1_6_R3.ItemStack;
-import net.minecraft.server.v1_6_R3.RecipesFurnace;
+import org.bukkit.Material;
+
+import net.minecraft.server.v1_7_R1.CraftingManager;
+import net.minecraft.server.v1_7_R1.IRecipe;
+import net.minecraft.server.v1_7_R1.Item;
+import net.minecraft.server.v1_7_R1.ItemStack;
+import net.minecraft.server.v1_7_R1.RecipesFurnace;
 
 //##################################################################################### RealRecipes
 public class RealRecipe
@@ -97,7 +99,8 @@ public class RealRecipe
 		resultItem.setAmount(8);
 		recipeItemStack.setAmount(8);
 		this.resultItem = resultItem;
-		this.recipeItems.add(new RealItemStack(Item.COAL.id));
+		// TODO check Material.COAL.getId()
+		this.recipeItems.add(new RealItemStack(Material.COAL.getId()));
 		this.recipeItems.add(recipeItemStack);
 	}
 
@@ -110,15 +113,16 @@ public class RealRecipe
 	//-------------------------------------------------------------------------------- dumpAllRecipes
 	public static void dumpAllRecipes(Integer itemId)
 	{
-		for (int i = 1; i <= 2500; i++) {
-			if ((Item.byId[i] != null) && ((itemId == null) || (itemId == i))) {
-				Item item = Item.byId[i];
-				for (RealRecipe recipe : getItemRecipes(new RealItemType(item.id))) {
+		for (int i = 1; i < 2268; i++) {
+			if ((Item.d(i) != null) && ((itemId == null) || (itemId == i))) {
+				// TODO check Item.d() and item.c()
+				Item item = Item.d(i);
+				for (RealRecipe recipe : getItemRecipes(new RealItemType(item.c()))) {
 					System.out.println("RECIPE " + i + " : " + recipe.toNamedString());
 				}
 			}
-			if (i == 121) i = 255;
-			if (i == 383) i = 2255;
+			if (i == 175) i = 255;
+			if (i == 422) i = 2255;
 		}
 	}
 

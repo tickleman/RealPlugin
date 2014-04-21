@@ -3,8 +3,8 @@ package fr.crafter.tickleman.realplugin;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import net.minecraft.server.v1_6_R3.Block;
-import net.minecraft.server.v1_6_R3.Item;
+import net.minecraft.server.v1_7_R1.Block;
+import net.minecraft.server.v1_7_R1.Item;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -115,7 +115,8 @@ public class RealItemType
 	//--------------------------------------------------------------------------------------- getName
 	public static String getName(int typeId)
 	{
-		Object object = ((typeId < 256) ? Block.byId[typeId] : Item.byId[typeId]);
+		// TODO check if Block.e(typeId) is the right replacement of Block.byId[typeId] (same for item)
+		Object object = ((typeId < 256) ? Block.e(typeId) : Item.d(typeId));
 		String name = getNameOf(object);
 		for (int i = 0; i < name.length(); i ++) {
 			if ((name.charAt(i) >= 'A') && (name.charAt(i) <= 'Z')) {
@@ -233,12 +234,12 @@ public class RealItemType
 			|| (typeId == Material.HUGE_MUSHROOM_2.getId()) // 100
 			|| (typeId == Material.WOOD_DOUBLE_STEP.getId()) // 125
 			|| (typeId == Material.WOOD_STEP.getId()) // 126
-			|| (typeId == Item.COAL.id) // 263
-			|| (typeId == Item.INK_SACK.id) // 351
-			|| (typeId == Item.MAP.id) // 358
-			|| (typeId == Item.POTION.id) // 373
+			|| (typeId == Material.COAL.getId()) // 263 TODO CHECK
+			|| (typeId == Material.INK_SACK.getId()) // 351 TODO CHECK
+			|| (typeId == Material.MAP.getId()) // 358 TODO CHECK
+			|| (typeId == Material.POTION.getId()) // 373 TODO CHECK
 			|| (typeId == Material.MONSTER_EGG.getId()) // 383
-			|| (typeId == Item.BOOK_AND_QUILL.id) // 386
+			|| (typeId == Material.BOOK_AND_QUILL.getId()) // 386 TODO CHECK
 		;
 	}
 
@@ -256,7 +257,8 @@ public class RealItemType
 				if (!strength.isAccessible()) {
 					strength.setAccessible(true);
 				}
-				return (short) Math.round(strength.getDouble(Block.byId[typeId]));
+				// TODO Check if e() is the right replacement for getById[]
+				return (short) Math.round(strength.getDouble(Block.e(typeId)));
 			} catch (IllegalArgumentException e) {
 			} catch (SecurityException e) {
 			} catch (IllegalAccessException e) {
@@ -265,7 +267,7 @@ public class RealItemType
 			System.out.println("default damage 128 for item id " + typeId);
 			return 128;
 		} else {
-			return (short)Item.byId[typeId].getMaxDurability();
+			return (short)Item.d(typeId).getMaxDurability();
 		}
 	}
 
