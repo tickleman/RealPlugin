@@ -1,7 +1,6 @@
 package fr.crafter.tickleman.realplugin;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -16,63 +15,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class RealPluginPlugin extends JavaPlugin
 {
 
-	//-------------------------------------------------------------------------------------- download
-	public boolean download(String plugin)
-	{
-		return download(plugin, "release");
-	}
-
-	//-------------------------------------------------------------------------------------- download
-	public boolean download(String plugin, String version)
-	{
-		boolean result = false;
-		int bakTimeout = RealFileTools.httpTimeout;
-		RealFileTools.httpTimeout = 10000;
-		String urlplugin = plugin.toLowerCase().replace("realshop2", "realshop");
-		String url = null;
-		String buffer = "";
-		try {
-			buffer = RealFileTools.getFileContents(
-				"http://dev.bukkit.org/server-mods/" + urlplugin + "/files"
-			);
-		} catch (IOException e) {
-		}
-		String[] filesBuffer = buffer.toLowerCase().split("<td class=\"col-file\">");
-		for (int i = 1; i < filesBuffer.length; i++) {
-			String fileBuffer = filesBuffer[i];
-			String fileVersion = fileBuffer.split(">" + urlplugin + " v")[1].split("<")[0];
-			if ((fileVersion == version) || (version == "release")) {
-				String fileUrl = "http://dev.bukkit.org"
-					+ fileBuffer.split("<a href=\"")[1].split("\">")[0];
-				fileBuffer = "";
-				try {
-					fileBuffer = RealFileTools.getFileContents(fileUrl);
-				} catch (IOException e) {
-				}
-				if (
-					fileBuffer.contains("<li class=\"user-action user-action-download\">")
-					&& fileBuffer.contains("<a href=\"")
-				) {
-					fileUrl = fileBuffer.split("<li class=\"user-action user-action-download\">")[1]
-						.split("<a href=\"")[1].split("\">")[0];
-					url = fileUrl;
-				}
-				break;
-			}
-		}
-		if ((url != null) && RealFileTools.downloadFile(url, "plugins/" + plugin + ".jar")) {
-			result = true;
-		}
-		RealFileTools.httpTimeout = bakTimeout;
-		return result;
-	}
-
 	//------------------------------------------------------------------------------------- onCommand
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)
 	{
 		if (sender.isOp()) {
 			String command = cmd.getName().toLowerCase();
+			if (command.equals("realtests") || command.equals("rt")) {
+				Tests.run((args.length == 0) ? "all" : args[0], sender);
+				return true;
+			}
 			if (command.equals("realrecipes") || command.equals("rr")) {
 				if ((args.length == 1) && (args[0].equals("dump") || args[0].equals("d"))) {
 					sender.sendMessage("Recipes dumped on console");
@@ -81,40 +33,13 @@ public class RealPluginPlugin extends JavaPlugin
 				}
 				if ((args.length == 2) && (args[0].equals("dump") || args[0].equals("d"))) {
 					sender.sendMessage("Recipes dumped on console for item " + args[1]);
-					RealRecipe.dumpAllRecipes(Integer.parseInt(args[1]));
+					RealRecipe.dumpAllRecipes(args[1]);
 					return true;
 				}
 			}
 			if (command.equals("realplugin") || command.equals("rp")) {
-				if (args.length == 3) {
-					if (args[0].equalsIgnoreCase("download") || args[0].equalsIgnoreCase("dl")) {
-						// /realplugin download <plugin> <version>
-						if (download(args[1], args[2])) {
-							sender.sendMessage(
-								"Plugin " + args[1] + " version " + args[2] + " has been downloaded."
-								+ " /stop or /reload your server to load it."
-							);
-							return true;
-						} else {
-							sender.sendMessage("plugin " + args[1] + " could not be downloaded or installed.");
-						}
-					}
-				} else if (args.length == 2) {
-					if (
-						args[0].equalsIgnoreCase("download") || args[0].equalsIgnoreCase("dl")
-						|| args[0].equalsIgnoreCase("update") || args[0].equalsIgnoreCase("upd")
-					) {
-						// /realplugin download <plugin>
-						if (download(args[1])) {
-							sender.sendMessage(
-								"plugin " + args[1] + " release has been downloaded."
-								+ " /stop or /reload your server to load it."
-							);
-							return true;
-						} else {
-							sender.sendMessage("plugin " + args[1] + " could not be downloaded or installed.");
-						}
-					} else if (args[0].equalsIgnoreCase("load") || args[0].equalsIgnoreCase("l")) {
+				if (args.length == 2) {
+					if (args[0].equalsIgnoreCase("load") || args[0].equalsIgnoreCase("l")) {
 						Plugin plugin = getServer().getPluginManager().getPlugin(args[1]);
 						if (plugin == null) {
 							try {
@@ -201,10 +126,6 @@ public class RealPluginPlugin extends JavaPlugin
 					// /realplugin help
 					if (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("h")) {
 						String[] help = {
-							ChatColor.YELLOW + "/rp dl RealPlugin" + ChatColor.WHITE + " : download last release of RealPlugin.jar",
-							"available plugins are RealAdminTools, RealDistantCommands,",
-							"  RealJobs, RealPlugin, RealShop2, RealStats, RealTeleporter,",
-							"  RealViewDontTouch.",
 							ChatColor.YELLOW + "/rp r PluginName" + ChatColor.WHITE + " : reload any plugin",
 							ChatColor.YELLOW + "/rp d PluginName" + ChatColor.WHITE + " : disable any plugin",
 							ChatColor.YELLOW + "/rp e PluginName" + ChatColor.WHITE + " : enable any plugin",
@@ -228,18 +149,6 @@ public class RealPluginPlugin extends JavaPlugin
 			}
 		}
 		return false;
-	}
-
-	//------------------------------------------------------------------------------------- onDisable
-	@Override
-	public void onDisable()
-	{
-	}
-
-	//-------------------------------------------------------------------------------------- onEnable
-	@Override
-	public void onEnable()
-	{
 	}
 
 }

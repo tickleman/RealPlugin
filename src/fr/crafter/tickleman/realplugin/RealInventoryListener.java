@@ -37,7 +37,7 @@ public class RealInventoryListener implements Listener
 		} else {
 			for (ItemStack slot : inventory.getContents()) {
 				if (	
-					(slot.getTypeId() == itemStack.getTypeId())
+					(slot.getType().name().equals(itemStack.getType().name()))
 					&& (slot.getType().getMaxStackSize() > slot.getAmount())
 				) {
 					toStore -= (slot.getType().getMaxStackSize() - slot.getAmount());
@@ -69,7 +69,7 @@ public class RealInventoryListener implements Listener
 	{
 		RealInventoryMove inventoryMove = whatWillReallyBeDone(event);
 		event.setResult(Result.ALLOW);
-		event.setCursor(inventoryMove.getCursor());
+		event.getView().setCursor(inventoryMove.getCursor());
 		event.setCurrentItem(inventoryMove.getItem());
 		event.setCancelled(true);
 		return inventoryMove;
@@ -119,7 +119,7 @@ public class RealInventoryListener implements Listener
 			&& !event.isLeftClick() && !event.isShiftClick()
 		) {
 			event.setResult(Result.ALLOW);
-			event.setCursor(event.getCurrentItem()/*.clone()*/);
+			event.getView().setCursor(event.getCurrentItem());
 			event.getCursor().setAmount(1);
 			if (event.getCurrentItem().getAmount() == 1) {
 				event.setCurrentItem(new ItemStack(Material.AIR));

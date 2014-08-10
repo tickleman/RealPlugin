@@ -1,6 +1,6 @@
 name: RealPlugin
 main: fr.crafter.tickleman.realplugin.RealPluginPlugin
-version: 1.33
+version: 1.7.10
 website: http://plugins.crafter.fr/tickleman/RealPlugin/
 author: tickleman
 load: STARTUP
@@ -13,3 +13,7 @@ commands:
     aliases: [rr]
     description: Information commands about recipes
     usage: /rr dump
+  realtests:
+    aliases: [rt]
+    description: Run all tests
+    usage: /rt

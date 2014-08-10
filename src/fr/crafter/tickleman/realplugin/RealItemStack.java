@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
@@ -31,34 +32,33 @@ public class RealItemStack extends RealItemType
 	public RealItemStack(ItemStack itemStack)
 	{
 		this(
-			itemStack.getTypeId(), itemStack.getAmount(),
+			itemStack.getType().name(), itemStack.getAmount(),
 			itemStack.getDurability(), itemStack.getEnchantments()
 		);
 	}
 
 	//--------------------------------------------------------------------------------- RealItemStack
-	public RealItemStack(net.minecraft.server.v1_7_R1.ItemStack itemStack)
+	public RealItemStack(net.minecraft.server.v1_7_R4.ItemStack itemStack)
 	{
-		// TODO Check if c() is the real replacement for id
-		this(itemStack.getItem().c(), itemStack.count, (short) itemStack.getData());
+		this(itemStack.getItem().getName(), itemStack.count, (short) itemStack.getData());
 	}
 
 	//--------------------------------------------------------------------------------- RealItemStack
-	public RealItemStack(int itemTypeId)
+	public RealItemStack(String itemTypeId)
 	{
 		super(itemTypeId);
 		setAmount(1);
 	}
 
 	//--------------------------------------------------------------------------------- RealItemStack
-	public RealItemStack(int typeId, int amount, short durability_variant)
+	public RealItemStack(String typeId, int amount, short durability_variant)
 	{
 		this(typeId, amount, durability_variant, null);
 	}
 
 	//--------------------------------------------------------------------------------- RealItemStack
 	public RealItemStack(
-		int typeId, int amount, short durability_variant, Map<Enchantment, Integer> enchantments
+		String typeId, int amount, short durability_variant, Map<Enchantment, Integer> enchantments
 	) {
 		super(typeId, durability_variant);
 		setAmount(amount);
@@ -74,8 +74,9 @@ public class RealItemStack extends RealItemType
 	public static ItemStack cloneItem(ItemStack itemStack)
 	{
 		ItemStack newItemStack = new ItemStack(
-			itemStack.getType(), itemStack.getAmount(), itemStack.getDurability(),
-			itemStack.getData().getData()
+			Material.valueOf(itemStack.getType().name()),
+			itemStack.getAmount(),
+			itemStack.getDurability()
 		);
 		if (newItemStack.getEnchantments() != null) {
 			newItemStack.addEnchantments(newItemStack.getEnchantments());
@@ -86,7 +87,9 @@ public class RealItemStack extends RealItemType
 	//---------------------------------------------------------------------------------------- create
 	public static RealItemStack create(ItemStack itemStack)
 	{
-		return (itemStack == null) ? new RealItemStack(0) : new RealItemStack(itemStack);
+		return (itemStack == null)
+			? new RealItemStack(Material.AIR.name())
+			: new RealItemStack(itemStack);
 	}
 
 	//------------------------------------------------------------------------------------- getAmount
@@ -141,7 +144,7 @@ public class RealItemStack extends RealItemType
 
 	//------------------------------------------------------------------------------------- setTypeId
 	@Override
-	public void setTypeId(int typeId)
+	public void setTypeId(String typeId)
 	{
 		super.setTypeId(typeId);
 		if (!typeIdHasDamage(typeId)) {
@@ -152,7 +155,7 @@ public class RealItemStack extends RealItemType
 	//----------------------------------------------------------------------------------- toItemStack
 	public ItemStack toItemStack()
 	{
-		return new ItemStack(getTypeId(), getAmount(), getDamage());
+		return new ItemStack(Material.valueOf(getTypeId()), getAmount(), getDamage());
 	}
 
 	//--------------------------------------------------------------------------------- toNamedString
