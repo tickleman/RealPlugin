@@ -4,23 +4,20 @@ import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import com.nijikokun.register.payment.Method;
-import com.nijikokun.register.payment.Methods;
-
 import fr.crafter.tickleman.realplugin.RealPlugin;
 
 //##################################################################################### RealEconomy
 public class RealEconomy
 {
 
-	private RealAccounts      accounts;
-	private RealEconomyConfig config;
-	private RealPlugin        plugin;
-	private String            economyPlugin;
-	private Method            paymentMethod = null;
-	private Economy           vaultEconomy = null;
-	private boolean registerEnabled = false;
-	private boolean vaultEnabled = false;
+	private final RealAccounts      accounts;
+	private final RealEconomyConfig config;
+	private String                  economyPlugin;
+	private final RealPlugin        plugin;
+	//private Method                paymentMethod = null;
+	private boolean                 registerEnabled = false;
+	private Economy                 vaultEconomy = null;
+	private boolean                 vaultEnabled = false;
 
 	//----------------------------------------------------------------------------------- RealEconomy
 	public RealEconomy(RealPlugin plugin)
@@ -55,12 +52,15 @@ public class RealEconomy
 	//------------------------------------------------------------------------------------ getBalance
 	public double getBalance(String playerName)
 	{
-		Double balance = 0.0;
+		Double balance;
 		if (economyPlugin.equals("Vault")) {
 			balance = vaultEconomy.getBalance(playerName);
-		} else if (economyPlugin.equals("Register")) {
-			balance = paymentMethod.getAccount(playerName).balance();
-		} else {
+		}
+		else if (economyPlugin.equals("Register")) {
+			balance = .0;
+			//balance = paymentMethod.getAccount(playerName).balance();
+		}
+		else {
 			balance = accounts.getBalance(playerName);
 			if (balance == null) {
 				balance = config.initialBalance;
@@ -76,7 +76,8 @@ public class RealEconomy
 		Double balance = getBalance(playerName);
 		if (withCurrency) {
 			return format(balance);
-		} else {
+		}
+		else {
 			return balance.toString();
 		}
 	}
@@ -98,9 +99,11 @@ public class RealEconomy
 	{
 		if (economyPlugin.equals("Vault")) {
 			return vaultEconomy.getBalance(playerName) > 0;
-		} else if (economyPlugin.equals("Register")) {
-			return paymentMethod.hasAccount(playerName);
-		} else {
+		}
+		else if (economyPlugin.equals("Register")) {
+			return false; // paymentMethod.hasAccount(playerName);
+		}
+		else {
 			return (accounts.getBalance(playerName) != null);
 		}
 	}
@@ -110,6 +113,7 @@ public class RealEconomy
 	{
 		if (!registerEnabled) {
 			if (plugin.getServer().getPluginManager().getPlugin("Register") != null) {
+				/*
 				if (!Methods.hasMethod()) {
 					if (Methods.setMethod(plugin.getServer().getPluginManager())) {
 						Method method = Methods.getMethod();
@@ -122,6 +126,7 @@ public class RealEconomy
 						}
 					}
 				}
+				*/
 			}
 		}
 	}
@@ -137,13 +142,11 @@ public class RealEconomy
 					);
 				if (economyProvider != null) {
 					vaultEconomy = economyProvider.getProvider();
-					if (vaultEconomy != null) {
-						economyPlugin = "Vault";
-						plugin.getLog().info(
-							"Economy provider " + vaultEconomy.getName() + " enabled (Vault)"
-						);
-						vaultEnabled = true;
-					}
+					economyPlugin = "Vault";
+					plugin.getLog().info(
+						"Economy provider " + vaultEconomy.getName() + " enabled (Vault)"
+					);
+					vaultEnabled = true;
 				}
 			}
 		}
@@ -155,25 +158,29 @@ public class RealEconomy
 		if (economyPlugin.equals("Vault")) {
 			if (balance > vaultEconomy.getBalance(playerName)) {
 				vaultEconomy.depositPlayer(playerName, balance - vaultEconomy.getBalance(playerName));
-			} else {
+			}
+			else {
 				vaultEconomy.withdrawPlayer(playerName, vaultEconomy.getBalance(playerName) - balance);
 			}
-		} else if (economyPlugin.equals("Register")) {
-			paymentMethod.getAccount(playerName).set(balance);
-		} else {
+		}
+		else if (economyPlugin.equals("Register")) {
+			//paymentMethod.getAccount(playerName).set(balance);
+		}
+		else {
 			accounts.setBalance(playerName, balance);
 		}
 		plugin.getLog().debug("setBalance(" + playerName + ", " + balance + ")");
 	}
 
 	//------------------------------------------------------------------------------ setPaymentMethod
-	public void setPaymentMethod(Method paymentMethod)
+	public void setPaymentMethod(Object paymentMethod) // Method
 	{
 		economyPlugin = "Register";
-		this.paymentMethod = paymentMethod;
+		//this.paymentMethod = paymentMethod;
 		if (paymentMethod == null) {
 			registerEnabled = false;
-		} else {
+		}
+		else {
 			registerEnabled = true;
 		}
 	}

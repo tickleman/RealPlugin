@@ -8,7 +8,7 @@ import fr.crafter.tickleman.realplugin.RealColor;
 public class RealEconomyAction
 {
 
-	private RealEconomy economy;
+	private final RealEconomy economy;
 
 	//----------------------------------------------------------------------------- RealEconomyAction
 	public RealEconomyAction(RealEconomy economy)
@@ -19,7 +19,7 @@ public class RealEconomyAction
 	//------------------------------------------------------------------------------------------ burn
 	public void burn(Player player, double amount)
 	{
-		Double playerAmount = economy.getBalance(player.getName());
+		double playerAmount = economy.getBalance(player.getName());
 		economy.setBalance(player.getName(), Math.max(0.0, playerAmount - amount));
 		player.sendMessage(
 			RealColor.message + "You burn "
@@ -30,7 +30,7 @@ public class RealEconomyAction
 	//------------------------------------------------------------------------------------------- dec
 	public void dec(Player player, String playerName, double amount)
 	{
-		Double playerAmount = economy.getBalance(playerName);
+		double playerAmount = economy.getBalance(playerName);
 		economy.setBalance(playerName, Math.max(0.0, playerAmount - amount));
 		player.sendMessage(
 			RealColor.message + "You decrease "
@@ -62,7 +62,7 @@ public class RealEconomyAction
 	public void give(Player player, String playerName, double amount)
 	{
 		if (economy.hasAccount(playerName)) {
-			Double playerAmount = economy.getBalance(player.getName());
+			double playerAmount = economy.getBalance(player.getName());
 			amount = Math.min(playerAmount, amount);
 			economy.setBalance(player.getName(), playerAmount - amount);
 			economy.setBalance(playerName, economy.getBalance(playerName) + amount);

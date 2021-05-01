@@ -26,6 +26,7 @@ public class RealFileTools
 	{
 		File file = new File(fileName);
 		if (file.exists()) {
+			//noinspection ResultOfMethodCallIgnored
 			file.delete();
 		}
 	}
@@ -39,9 +40,7 @@ public class RealFileTools
 			connection.setUseCaches(false);
 			InputStream input = connection.getInputStream();
 			try {
-				DataOutputStream output = new DataOutputStream(
-					new FileOutputStream(new File(filename + ".tmp"))
-				);
+				DataOutputStream output = new DataOutputStream(new FileOutputStream(filename + ".tmp"));
 				try {
 					byte[] buffer = new byte[10240];
 					int size;
@@ -78,20 +77,20 @@ public class RealFileTools
 				plugin.getServer().getLogger().log(
 					Level.INFO, "Create default file " + fileName + " for " + filePath
 				);
-				FileOutputStream output = null;
 				try {
-					output = new FileOutputStream(actual);
+					FileOutputStream output = new FileOutputStream(actual);
 					byte[] buf = new byte[8192];
-					int length = 0;
+					int length;
 					while ((length = input.read(buf)) > 0) {
 						output.write(buf, 0, length);
 					}
 					plugin.getServer().getLogger().log(Level.INFO, "Default file written " + filePath);
-				} catch (Exception e) {
+					input.close();
+					output.close();
+				}
+				catch (Exception e) {
 					e.printStackTrace();
 				}
-				try { input.close();  } catch (Exception e) {}
-				try { output.close(); } catch (Exception e) {}
 			}
 		}
 	}
@@ -99,7 +98,7 @@ public class RealFileTools
 	//------------------------------------------------------------------------------- getFileContents
 	public static String getFileContents(String filename) throws IOException
 	{
-		if (filename.substring(0, 4).equals("http") && filename.contains(":/")) {
+		if (filename.startsWith("http") && filename.contains(":/")) {
 			if (downloadFile(filename, "download.tmp")) {
 				return readFullTextFile("download.tmp");
 			} else {
@@ -110,7 +109,7 @@ public class RealFileTools
 			StringBuilder buffer = new StringBuilder();
 			String line;
 			while ((line = reader.readLine()) != null) {
-				buffer.append(line + "\n");
+				buffer.append(line).append("\n");
 			}
 			reader.close();
 			return buffer.toString();
@@ -128,6 +127,7 @@ public class RealFileTools
 	{
 		File dir = new File(dirName);
 		if (!dir.exists()) {
+			//noinspection ResultOfMethodCallIgnored
 			dir.mkdirs();
 		}
 	}
@@ -135,7 +135,7 @@ public class RealFileTools
 	//------------------------------------------------------------------------------ readFullTextFile
 	public static String readFullTextFile(String fileName) throws IOException
 	{
-		StringBuffer sb = new StringBuffer(10240);
+		StringBuilder sb = new StringBuilder(10240);
 		BufferedReader reader = new BufferedReader(new FileReader(fileName));
 		char[] chars = new char[10240];
 		while (reader.read(chars) > -1) {
@@ -151,6 +151,7 @@ public class RealFileTools
 		File from = new File(fromFile);
 		File to = new File(toFile);
 		if (from.exists() && !to.exists()) {
+			//noinspection ResultOfMethodCallIgnored
 			from.renameTo(to);
 		}
 	}

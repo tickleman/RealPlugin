@@ -115,16 +115,22 @@ public class RealLog
 			log(mark, text);
 		}
 		if (global || !pluginLog) {
-			if (mark.equals("INFO")) {
-				globalLog.info("[" + plugin.getDescription().getName() + "] " + text);
-			} else if (mark.equals("WARNING")) {
-				globalLog.warning("[" + plugin.getDescription().getName() + "] " + text);
-			} else if (mark.equals("SEVERE")) {
-				globalLog.severe("[" + plugin.getDescription().getName() + "] " + text);
-			} else if (mark.equals("ERROR")) {
-				globalLog.info("[ERROR] [" + plugin.getDescription().getName() + "] " + text);
-			} else if (mark.equals("DEBUG")) {
-				globalLog.info("[DEBUG] [" + plugin.getDescription().getName() + "] " + text);
+			switch (mark) {
+				case "INFO":
+					globalLog.info("[" + plugin.getDescription().getName() + "] " + text);
+					break;
+				case "WARNING":
+					globalLog.warning("[" + plugin.getDescription().getName() + "] " + text);
+					break;
+				case "SEVERE":
+					globalLog.severe("[" + plugin.getDescription().getName() + "] " + text);
+					break;
+				case "ERROR":
+					globalLog.info("[ERROR] [" + plugin.getDescription().getName() + "] " + text);
+					break;
+				case "DEBUG":
+					globalLog.info("[DEBUG] [" + plugin.getDescription().getName() + "] " + text);
+					break;
 			}
 		}
 	}

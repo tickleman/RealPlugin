@@ -3,9 +3,8 @@ package fr.crafter.tickleman.realplugin;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import net.minecraft.server.v1_7_R4.Block;
-
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 
 //#################################################################################### RealItemType
@@ -74,19 +73,23 @@ public class RealItemType
 			for (Method method : object.getClass().getDeclaredMethods()) {
 				if ((method.getParameterTypes().length == 0)) {
 					if (method.getReturnType().getName().equals("java.lang.String")) {
+						//noinspection CatchMayIgnoreException
 						try {
 							name = (String) method.invoke(object);
 							break;
-						} catch (Exception e) {
 						}
-					} else if (
+						catch (Exception e) {
+						}
+					}
+					else if (
 						method.getName().equals("getParent")
 						&& (method.getParameterTypes().length == 0)
 					) {
+						//noinspection CatchMayIgnoreException
 						try {
 							Object object2 = method.invoke(object);
 							name = getNameOf(object2);
-							if ((name != null) && (name.length() > 0)) {
+							if (name.length() > 0) {
 								break;
 							}
 						} catch (Exception e) {
@@ -103,7 +106,8 @@ public class RealItemType
 			if (name.length() > 5) {
 				if (name.substring(0, 5).equalsIgnoreCase("block")) {
 					name = name.substring(5);
-				} else if (name.substring(0, 4).equalsIgnoreCase("item")) {
+				}
+				else if (name.substring(0, 4).equalsIgnoreCase("item")) {
 					name = name.substring(4);
 				}
 			}
@@ -127,10 +131,12 @@ public class RealItemType
 			if ((name.charAt(i) >= 'A') && (name.charAt(i) <= 'Z')) {
 				if (i == 0) {
 					name = (char)(name.charAt(i) - 'A' + 'a') + name.substring(i + 1);
-				} else if (name.charAt(i - 1) == ' ') {
+				}
+				else if (name.charAt(i - 1) == ' ') {
 					name = name.substring(0, i) + (char)(name.charAt(i) - 'A' + 'a')
 						+ name.substring(i + 1);
-				} else {
+				}
+				else {
 					name = name.substring(0, i) + " " + (char)(name.charAt(i) - 'A' + 'a')
 						+ name.substring(i + 1);
 				}
@@ -188,7 +194,7 @@ public class RealItemType
 	//------------------------------------------------------------------------------------ isSameItem
 	public boolean isSameItem(RealItemType itemType)
 	{
-		return (itemType.getTypeId() == getTypeId()) && (itemType.getVariant() == getVariant());
+		return (itemType.getTypeId().equals(getTypeId())) && (itemType.getVariant() == getVariant());
 	}
 
 	//------------------------------------------------------------------------------ setTypeIdVariant
@@ -230,41 +236,41 @@ public class RealItemType
 	//------------------------------------------------------------------------------ typeIdHasVariant
 	public static Boolean typeIdHasVariant(String typeId)
 	{
-		return false
+		return
 			// those codes have variant : durability is an item variant instead of damage
 			// - blocks
-			|| (typeId.equals(Material.WOOD.name())) // 5
-			|| (typeId.equals(Material.SAPLING.name())) // 6
-			|| (typeId.equals(Material.LOG.name())) // 17
-			|| (typeId.equals(Material.LEAVES.name())) // 18
-			|| (typeId.equals(Material.LONG_GRASS.name())) // 31
-			|| (typeId.equals(Material.WOOL.name())) // 35
-			|| (typeId.equals(Material.DOUBLE_STEP.name())) // 43
-			|| (typeId.equals(Material.STEP.name())) // 44
+			   (typeId.equals(Material.LEGACY_WOOD.name())) // 5
+			|| (typeId.equals(Material.LEGACY_SAPLING.name())) // 6
+			|| (typeId.equals(Material.LEGACY_LOG.name())) // 17
+			|| (typeId.equals(Material.LEGACY_LEAVES.name())) // 18
+			|| (typeId.equals(Material.LEGACY_LONG_GRASS.name())) // 31
+			|| (typeId.equals(Material.LEGACY_WOOL.name())) // 35
+			|| (typeId.equals(Material.LEGACY_DOUBLE_STEP.name())) // 43
+			|| (typeId.equals(Material.LEGACY_STEP.name())) // 44
 			|| (typeId.equals(Material.JUKEBOX.name())) // 84
-			|| (typeId.equals(Material.SMOOTH_BRICK.name())) // 98
-			|| (typeId.equals(Material.HUGE_MUSHROOM_1.name())) // 99
-			|| (typeId.equals(Material.HUGE_MUSHROOM_2.name())) // 100
-			|| (typeId.equals(Material.WOOD_DOUBLE_STEP.name())) // 125
-			|| (typeId.equals(Material.WOOD_STEP.name())) // 126
-			|| (typeId.equals(Material.COBBLE_WALL.name())) // 139
-			|| (typeId.equals(Material.SKULL.name())) // 144
+			|| (typeId.equals(Material.LEGACY_SMOOTH_BRICK.name())) // 98
+			|| (typeId.equals(Material.LEGACY_HUGE_MUSHROOM_1.name())) // 99
+			|| (typeId.equals(Material.LEGACY_HUGE_MUSHROOM_2.name())) // 100
+			|| (typeId.equals(Material.LEGACY_WOOD_DOUBLE_STEP.name())) // 125
+			|| (typeId.equals(Material.LEGACY_WOOD_STEP.name())) // 126
+			|| (typeId.equals(Material.LEGACY_COBBLE_WALL.name())) // 139
+			|| (typeId.equals(Material.LEGACY_SKULL.name())) // 144
 			|| (typeId.equals(Material.QUARTZ_BLOCK.name())) // 155
-			|| (typeId.equals(Material.HARD_CLAY.name())) // 159
-			|| (typeId.equals(Material.LEAVES_2.name())) // 161
-			|| (typeId.equals(Material.LOG_2.name())) // 162
-			|| (typeId.equals(Material.CARPET.name())) // 171
+			|| (typeId.equals(Material.LEGACY_HARD_CLAY.name())) // 159
+			|| (typeId.equals(Material.LEGACY_LEAVES_2.name())) // 161
+			|| (typeId.equals(Material.LEGACY_LOG_2.name())) // 162
+			|| (typeId.equals(Material.LEGACY_CARPET.name())) // 171
 			// - items
 			|| (typeId.equals(Material.COAL.name())) // 263
 			|| (typeId.equals(Material.GOLDEN_APPLE.name())) // 322
-			|| (typeId.equals(Material.RAW_FISH.name())) // 349
-			|| (typeId.equals(Material.COOKED_FISH.name())) // 350
-			|| (typeId.equals(Material.INK_SACK.name())) // 351
+			|| (typeId.equals(Material.LEGACY_RAW_FISH.name())) // 349
+			|| (typeId.equals(Material.LEGACY_COOKED_FISH.name())) // 350
+			|| (typeId.equals(Material.LEGACY_INK_SACK.name())) // 351
 			|| (typeId.equals(Material.MAP.name())) // 358
 			|| (typeId.equals(Material.POTION.name())) // 373
-			|| (typeId.equals(Material.MONSTER_EGG.name())) // 383
-			|| (typeId.equals(Material.BOOK_AND_QUILL.name())) // 386
-			|| (typeId.equals(Material.SKULL_ITEM.name())) // 397
+			|| (typeId.equals(Material.LEGACY_MONSTER_EGG.name())) // 383
+			|| (typeId.equals(Material.LEGACY_BOOK_AND_QUILL.name())) // 386
+			|| (typeId.equals(Material.LEGACY_SKULL_ITEM.name())) // 397
 		;
 	}
 
@@ -273,10 +279,13 @@ public class RealItemType
 	{
 		if (typeIdHasVariant(typeId)) {
 			return 0;
-		} else if (isBlock(typeId)) {
-			// this could be easily broken on craftbukkit's next updates,
+		}
+		else if (isBlock(typeId)) {
+			/*
+			// this could be easily broken on bukkit next updates,
 			// but I mean that blocks are never traded with a damage value, as they are
 			// damaged only when you hit them, and are never damaged when in inventories
+			//noinspection CatchMayIgnoreException,TryWithIdenticalCatches
 			try {
 				Field strength = Block.class.getField("durability");
 				if (!strength.isAccessible()) {
@@ -290,9 +299,12 @@ public class RealItemType
 			} catch (NoSuchFieldException e) {
 			}
 			System.out.println("default damage 128 for item id " + typeId);
+			*/
 			return 128;
-		} else {
-			return Material.getMaterial(typeId).getMaxDurability();
+		}
+		else {
+			Material material = Material.getMaterial(typeId);
+			return (material == null) ? 0 : material.getMaxDurability();
 		}
 	}
 
@@ -300,45 +312,45 @@ public class RealItemType
 	public static short[] typeIdVariants(RealItemType parseItemType)
 	{
 		if (
-			parseItemType.typeId.equals(Material.LOG.name())
-			|| parseItemType.typeId.equals(Material.LEAVES.name())
-			|| parseItemType.typeId.equals(Material.SAPLING.name())
+			parseItemType.typeId.equals(Material.LEGACY_LOG.name())
+			|| parseItemType.typeId.equals(Material.LEGACY_LEAVES.name())
+			|| parseItemType.typeId.equals(Material.LEGACY_SAPLING.name())
 		) {
-			short[] variants = {0, 1, 2, 3, 4, 5, 6, 7};
-			return variants;
-		} else if (
-			parseItemType.typeId.equals(Material.DOUBLE_STEP.name())
-			|| parseItemType.typeId.equals(Material.STEP.name())
+			return new short[]{0, 1, 2, 3, 4, 5, 6, 7};
+		}
+		else if (
+			parseItemType.typeId.equals(Material.LEGACY_DOUBLE_STEP.name())
+			|| parseItemType.typeId.equals(Material.LEGACY_STEP.name())
 		) {
-			short[] variants = {0, 1, 2, 3, 4, 5, 6};
-			return variants;
-		} else if (
-			parseItemType.typeId.equals(Material.WOOL.name())
-			|| parseItemType.typeId.equals(Material.INK_SACK.name())
-		) {
-			short[] variants = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-			return variants;
-		} else if (parseItemType.typeId.equals(Material.COAL.name())) {
-			short[] variants = {0, 1};
-			return variants;
-		} else if (parseItemType.typeId.equals(Material.POTION.name())) {
-			short[] variants = {
+			return new short[]{0, 1, 2, 3, 4, 5, 6};
+		}
+		else if (
+			parseItemType.typeId.equals(Material.LEGACY_WOOL.name())
+			|| parseItemType.typeId.equals(Material.LEGACY_INK_SACK.name())
+		)
+		{
+			return new short[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+		}
+		else if (parseItemType.typeId.equals(Material.COAL.name())) {
+			return new short[]{0, 1};
+		}
+		else if (parseItemType.typeId.equals(Material.POTION.name())) {
+			return new short[]{
 				0, 16, 32, 64, 8192, 8193, 8257, 8225, 8194, 8258, 8226, 8195, 8259, 8197, 8229, 8201, 8265,
 				8233, 8196, 8260, 8228, 8200, 8264, 8202, 8266, 8204, 8236, 16384, 16385, 16449, 16417,
 				16386, 16450, 16418, 16387, 16451, 16389, 16421, 16393, 16457, 16425, 16388, 16452, 16420,
 				16392, 16456, 16394, 16458, 16396, 16428
 			};
-			return variants;
-		} else if (parseItemType.typeId.equals(Material.MONSTER_EGG.name())) {
-			short[] variants = {
+		}
+		else if (parseItemType.typeId.equals(Material.LEGACY_MONSTER_EGG.name())) {
+			return new short[]{
 				50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
 				90, 91, 92, 93, 94, 95, 96, 97, 98,
 				120
 			};
-			return variants;
-		} else {
-			short[] variants = {};
-			return variants;
+		}
+		else {
+			return new short[]{};
 		}
 	}
 

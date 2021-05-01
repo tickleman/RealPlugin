@@ -22,14 +22,12 @@ public class RealLinks
 	{
 		try {
 			Class.forName(className);
-		} catch (ClassNotFoundException e) {
+		}
+		catch (ClassNotFoundException e) {
 			return false;
 		}
 		essentials = (Essentials) RealPlugin.getRealServer().getPluginManager().getPlugin("Essentials");
-		if (essentials == null) {
-			return false;
-		}
-		return true;
+		return essentials != null;
 	}
 
 }

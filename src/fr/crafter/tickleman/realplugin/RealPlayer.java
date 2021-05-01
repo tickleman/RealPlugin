@@ -20,8 +20,7 @@ public class RealPlayer
 	//------------------------------------------------------------------------------------ getGodMode
 	public static boolean getGodMode(Player player)
 	{
-		boolean godMode = getEssentialsGodMode(player);
-		return godMode;
+		return getEssentialsGodMode(player);
 	}
 
 }

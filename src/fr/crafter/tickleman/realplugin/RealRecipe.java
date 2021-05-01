@@ -5,8 +5,6 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftFurnaceRecipe;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftShapelessRecipe;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -17,8 +15,8 @@ import org.bukkit.inventory.ShapelessRecipe;
 public class RealRecipe
 {
 
-	private Set<RealItemStack> recipeItems = new HashSet<RealItemStack>();
-	private RealItemStack resultItem;
+	private final Set<RealItemStack> recipeItems = new HashSet<>();
+	private final RealItemStack resultItem;
 
 	//--------------------------------------------------------------------------------- getResultItem
 	public Set<RealItemStack> getRecipeItems()
@@ -37,7 +35,7 @@ public class RealRecipe
 	{
 		resultItem = new RealItemStack(recipe.getResult());
 		for (ItemStack itemStack : recipe.getIngredientMap().values()) {
-			if (itemStack != null && itemStack.getType() != null) {
+			if (itemStack != null) {
 				recipeItems.add(new RealItemStack(itemStack));
 			}
 		}
@@ -106,10 +104,10 @@ public class RealRecipe
 			if (recipe instanceof ShapedRecipe) {
 				itemRecipes.add(new RealRecipe((ShapedRecipe)recipe));
 			}
-			else if (recipe instanceof CraftShapelessRecipe) {
+			else if (recipe instanceof ShapelessRecipe) {
 				itemRecipes.add(new RealRecipe((ShapelessRecipe)recipe));
 			}
-			else if (recipe instanceof CraftFurnaceRecipe) {
+			else if (recipe instanceof FurnaceRecipe) {
 				itemRecipes.add(new RealRecipe((FurnaceRecipe)recipe));
 			}
 		}
@@ -120,9 +118,9 @@ public class RealRecipe
 	//--------------------------------------------------------------------------------- toNamedString
 	public String toNamedString()
 	{
-		String result = "";
+		StringBuilder result = new StringBuilder();
 		for (RealItemStack itemStack : recipeItems) {
-			result += " + " + itemStack.toNamedString();
+			result.append(" + ").append(itemStack.toNamedString());
 		}
 		return resultItem.toNamedString() + " = " + result.substring(1);
 	}
@@ -131,9 +129,9 @@ public class RealRecipe
 	@Override
 	public String toString()
 	{
-		String result = "";
+		StringBuilder result = new StringBuilder();
 		for (RealItemStack itemStack : recipeItems) {
-			result += "+" + itemStack.toString();
+			result.append("+").append(itemStack.toString());
 		}
 		return resultItem.toString() + "=" + result.substring(1);
 	}

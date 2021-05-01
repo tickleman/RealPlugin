@@ -10,8 +10,8 @@ import fr.crafter.tickleman.realplugin.RealVarTools;
 public class RealEconomyCommand
 {
 
-	private RealPlugin  plugin;
-	private RealEconomy economy;
+	private final RealPlugin  plugin;
+	private final RealEconomy economy;
 
 	//---------------------------------------------------------------------------- RealEconomyCommand
 	public RealEconomyCommand(RealPlugin plugin, RealEconomy economy)
@@ -32,31 +32,43 @@ public class RealEconomyCommand
 			};
 			RealEconomyAction action = new RealEconomyAction(economy);
 			if (!params[0].isEmpty() && plugin.hasPermission(player, "realeconomy." + params[0])) {
-				if (params[0].equals("burn")) {
-					action.burn(player, RealVarTools.parseDouble(params[1], 0.0));
-				} else if (params[0].equals("dec")) {
-					action.dec(player, params[1], RealVarTools.parseDouble(params[2], 0.0));
-				} else if (params[0].equals("display")) {
-					action.display(player);
-				} else if (params[0].equals("give")) {
-					action.give(player, params[1], RealVarTools.parseDouble(params[2], 0.0));
-				} else if (params[0].equals("help")) {
-					action.help(player);
-				} else if (params[0].equals("inc")) {
-					action.inc(player, params[1], RealVarTools.parseDouble(params[2], 0.0));
-				} else if (params[0].equals("set")) {
-					action.set(player, params[1], RealVarTools.parseDouble(params[2], 0.0));
-				} else if (params[0].equals("tell")) {
-					action.tell(player, params[1]);
+				switch (params[0]) {
+					case "burn":
+						action.burn(player, RealVarTools.parseDouble(params[1], 0.0));
+						break;
+					case "dec":
+						action.dec(player, params[1], RealVarTools.parseDouble(params[2], 0.0));
+						break;
+					case "display":
+						action.display(player);
+						break;
+					case "give":
+						action.give(player, params[1], RealVarTools.parseDouble(params[2], 0.0));
+						break;
+					case "help":
+						action.help(player);
+						break;
+					case "inc":
+						action.inc(player, params[1], RealVarTools.parseDouble(params[2], 0.0));
+						break;
+					case "set":
+						action.set(player, params[1], RealVarTools.parseDouble(params[2], 0.0));
+						break;
+					case "tell":
+						action.tell(player, params[1]);
+						break;
 				}
-			} else if (
+			}
+			else if (
 				!params[0].isEmpty() && !params[1].isEmpty()
 				&& plugin.hasPermission(player, "realeconomy.give")
 			) {
 				action.give(player, params[0], RealVarTools.parseDouble(params[1], 0.0));
-			} else if (!params[0].isEmpty() && plugin.hasPermission(player, "realeconomy.tell")) {
+			}
+			else if (!params[0].isEmpty() && plugin.hasPermission(player, "realeconomy.tell")) {
 				action.tell(player, params[1]);
-			} else if (params[0].isEmpty() && plugin.hasPermission(player, "realeconomy.display")) {
+			}
+			else if (params[0].isEmpty() && plugin.hasPermission(player, "realeconomy.display")) {
 				action.display(player);
 			}
 		}

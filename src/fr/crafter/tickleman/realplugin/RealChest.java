@@ -66,16 +66,10 @@ public class RealChest
 	public Inventory[] getInventories()
 	{
 		if (getNeighborChest() == null) {
-			Inventory[] inventories = {
-				getMainChest().getInventory()
-			};
-			return inventories;
-		} else {
-			Inventory[] inventories = {
-				getMainChest().getInventory(),
-				getNeighborChest().getInventory()
-			};
-			return inventories;
+			return new Inventory[]{ getMainChest().getInventory() };
+		}
+		else {
+			return new Inventory[]{ getMainChest().getInventory(), getNeighborChest().getInventory() };
 		}
 	}
 

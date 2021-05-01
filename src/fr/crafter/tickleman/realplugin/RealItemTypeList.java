@@ -8,7 +8,7 @@ import java.util.Set;
 public class RealItemTypeList
 {
 
-	private Map<String, RealItemType> content = new HashMap<String, RealItemType>();
+	private final Map<String, RealItemType> content = new HashMap<>();
 
 	//----------------------------------------------------------------------------------------- clear
 	public void clear()
@@ -27,7 +27,7 @@ public class RealItemTypeList
 		} else {
 			for (String subChain : chain.split("\\+")) {
 				boolean isPlus = true;
-				for (String elem : subChain.split("\\-")) {
+				for (String elem : subChain.split("-")) {
 					if (elem.length() > 0) {
 						if (elem.contains(":*")) {
 							elem = elem.replace(":*", "");
@@ -114,6 +114,7 @@ public class RealItemTypeList
 	}
 
 	//-------------------------------------------------------------------------------------- toString
+	@SuppressWarnings("StringConcatenationInLoop")
 	@Override
 	public String toString()
 	{
@@ -121,7 +122,8 @@ public class RealItemTypeList
 		for (String typeIdVariant : content.keySet()) {
 			if (result.isEmpty()) {
 				result += typeIdVariant;
-			} else {
+			}
+			else {
 				result += "," + typeIdVariant;
 			}
 		}
@@ -129,6 +131,7 @@ public class RealItemTypeList
 	}
 
 	//--------------------------------------------------------------------------------- toNamedString
+	@SuppressWarnings("StringConcatenationInLoop")
 	public String toNamedString()
 	{
 		String result = "";
@@ -142,6 +145,7 @@ public class RealItemTypeList
 	}
 
 	//--------------------------------------------------------------------------------- toNamedString
+	@SuppressWarnings("StringConcatenationInLoop")
 	public String toNamedString(RealPlugin plugin)
 	{
 		String result = "";

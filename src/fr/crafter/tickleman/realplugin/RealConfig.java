@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -17,13 +18,12 @@ public class RealConfig
 
 	private final String fileName;
 
-	public  boolean    debug = false;
-	public  String     language = "en"; 
-	public  String     permissionsPlugin = "bukkit";
-	private JavaPlugin plugin;
-	public  boolean    pluginLog = false;
-
-	private Set<Field> volatileFields = new HashSet<Field>();
+	public  boolean          debug = false;
+	public  String           language = "en";
+	public  String           permissionsPlugin = "bukkit";
+	private final JavaPlugin plugin;
+	public  boolean          pluginLog = false;
+	private final Set<Field> volatileFields = new HashSet<>();
 
 	//---------------------------------------------------------------------------------------- Config
 	public RealConfig(final JavaPlugin plugin)
@@ -50,9 +50,11 @@ public class RealConfig
 	private void copyFrom(RealConfig config)
 	{
 		for (Field field : getClass().getFields()) {
+			//noinspection CatchMayIgnoreException
 			try {
 				field.set(this, field.get(config));
-			} catch (Exception e) {
+			}
+			catch (Exception exception) {
 			}
 		}
 	}
@@ -77,29 +79,39 @@ public class RealConfig
 						String key = line[0].trim();
 						String value = line[1].trim();
 						Field field = getClass().getField(key);
-						if ((field == null) || volatileFields.contains(field)) {
+						if (volatileFields.contains(field)) {
 							getPlugin().getServer().getLogger().log(
 								Level.WARNING, "[" + getPlugin().getDescription().getName() + "] "
 								+ " ignore configuration option " + key
 								+ " in " + fileName + " (unknown keyword)"
 							);
-						} else {
+						}
+						else {
 							String fieldClass = field.getType().getName();
 							try {
-								if ((fieldClass.equals("boolean")) || (fieldClass.equals("java.lang.Boolean"))) {
-									field.set(this, RealVarTools.parseBoolean(value));
-								} else if ((fieldClass.equals("double")) || (fieldClass.equals("java.lang.Double"))) {
-									field.set(this, Double.parseDouble(value));
-								} else if ((fieldClass.equals("int")) || (fieldClass.equals("java.lang.Integer"))) {
-									field.set(this, Integer.parseInt(value));
-								} else {
-									field.set(this, value);
+								switch (fieldClass) {
+									case "boolean":
+									case "java.lang.Boolean":
+										field.set(this, RealVarTools.parseBoolean(value));
+										break;
+									case "double":
+									case "java.lang.Double":
+										field.set(this, Double.parseDouble(value));
+										break;
+									case "int":
+									case "java.lang.Integer":
+										field.set(this, Integer.parseInt(value));
+										break;
+									default:
+										field.set(this, value);
+										break;
 								}
-							} catch (Exception e) {
+							}
+							catch (Exception exception) {
 								getPlugin().getServer().getLogger().log(
 									Level.SEVERE, "[" + getPlugin().getDescription().getName() + "] "
 									+ " ignore configuration option " + key
-									+ " in " + fileName + " (" + e.getMessage() + ")"
+									+ " in " + fileName + " (" + exception.getMessage() + ")"
 								);
 							}
 						}
@@ -107,7 +119,8 @@ public class RealConfig
 				}
 			}
 			reader.close();
-		} catch (Exception e) {
+		}
+		catch (Exception exception) {
 			getPlugin().getServer().getLogger().log(
 				Level.WARNING, "[" + getPlugin().getDescription().getName() + "] "
 				+ " auto-create default " + fileName
@@ -142,9 +155,7 @@ public class RealConfig
 	private void setVolatileFields(Class<?> applyClass)
 	{
 		volatileFields.clear();
-		for (Field field : applyClass.getFields()) {
-			volatileFields.add(field);
-		}
+		Collections.addAll(volatileFields, applyClass.getFields());
 	}
 
 }

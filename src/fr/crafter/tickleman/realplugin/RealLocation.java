@@ -43,21 +43,19 @@ public class RealLocation extends Location
 	{
 		if (location1.getBlockX() < location2.getBlockX()) {
 			return -1;
-		} else if (location1.getBlockX() > location2.getBlockX()) {
+		}
+		else if (location1.getBlockX() > location2.getBlockX()) {
 			return 1;
-		} else {
+		}
+		else {
 			if (location1.getBlockZ() < location2.getBlockZ()) {
 				return -1;
-			} else if (location1.getBlockZ() > location2.getBlockZ()) {
+			}
+			else if (location1.getBlockZ() > location2.getBlockZ()) {
 				return 1;
-			} else {
-				if (location1.getBlockY() < location2.getBlockY()) {
-					return -1;
-				} else if (location1.getBlockY() > location2.getBlockY()) {
-					return 1;
-				} else {
-					return 0;
-				}
+			}
+			else {
+				return Integer.compare(location1.getBlockY(), location2.getBlockY());
 			}
 		}
 	}
@@ -71,11 +69,12 @@ public class RealLocation extends Location
 	//----------------------------------------------------------------------------------------- getId
 	public static String getId(Location location)
 	{
+		World world = location.getWorld();
 		return 
 			location.getBlockX() + ";"
 			+ location.getBlockY() + ";"
 			+ location.getBlockZ() + ";"
-			+ location.getWorld().getName();
+			+ ((world == null) ? "" : world.getName());
 	}
 
 	//----------------------------------------------------------------------------------------- getId
@@ -90,6 +89,9 @@ public class RealLocation extends Location
 	 */
 	private RealLocation identicalLocation(int dx, int dz)
 	{
+		if (getWorld() == null) {
+			return null;
+		}
 		RealLocation location = new RealLocation(getWorld(), getX() + dx, getY(), getZ() + dz);
 		Block block = getWorld().getBlockAt(location);
 		return block.getType().equals(getBlock().getType()) ? location : null;
@@ -117,26 +119,26 @@ public class RealLocation extends Location
 	//------------------------------------------------------------------------------------- neightbor
 	public static Location neighbor(Location location)
 	{
-		RealLocation realLocation = new RealLocation(location);
-		return (Location)realLocation.neighbor();
+		return new RealLocation(location).neighbor();
 	}
 
 	//------------------------------------------------------------------------------------ toLocation
 	public Location toLocation()
 	{
-		return (Location)this;
+		return this;
 	}
 
 	//-------------------------------------------------------------------------------------- toString
 	public String toString()
 	{
-		return getWorld().getName() + ";" + getBlockX() + ";" + getBlockY() + ";" + getBlockZ();
+		return ((getWorld() == null) ? "" : getWorld().getName()) + ";"
+			+ getBlockX() + ";" + getBlockY() + ";" + getBlockZ();
 	}
 
 	//-------------------------------------------------------------------------------------- toString
 	public static String toString(Location location)
 	{
-		return location.getWorld().getName() + ";"
+		return ((location.getWorld() == null) ? "" : location.getWorld().getName()) + ";"
 			+ location.getBlockX() + ";" + location.getBlockY() + ";" + location.getBlockZ();
 	}
 

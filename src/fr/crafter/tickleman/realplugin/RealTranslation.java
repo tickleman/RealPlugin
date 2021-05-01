@@ -12,9 +12,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class RealTranslation
 {
 
-	private final String            fileName;
-	private final JavaPlugin        plugin;
-	private Map<String, String> translations = new HashMap<String, String>();
+	private final String              fileName;
+	private final JavaPlugin          plugin;
+	private final Map<String, String> translations = new HashMap<>();
 
 	// ---------------------------------------------------------------------------------- Translation
 	public RealTranslation(final JavaPlugin plugin)

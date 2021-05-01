@@ -75,6 +75,7 @@ public class RealPlugin extends JavaPlugin
 	public void onEnable()
 	{
 		server = getServer();
+		//noinspection ResultOfMethodCallIgnored
 		getDataFolder().mkdirs();
 		reload();
 	}
@@ -123,7 +124,7 @@ public class RealPlugin extends JavaPlugin
 	 * If there is no translation file entry, then try to generate item name
 	 * from realItemType.getName() translation
 	 *
-	 * @param RealItemType itemType
+	 * @param itemType RealItemType
 	 * @return String
 	 */
 	public String trItemName(RealItemType itemType)
@@ -137,7 +138,7 @@ public class RealPlugin extends JavaPlugin
 	 * If there is no translation file entry, then try to generate item name
 	 * from realItemType.getName() translation
 	 *
-	 * @param String typeIdVariant
+	 * @param typeIdVariant String
 	 * @return String
 	 */
 	public String trItemName(String typeIdVariant)

@@ -24,7 +24,7 @@ public class RealItemStack extends RealItemType
 	 */
 	private short damage;
 
-	private Map<Enchantment, Integer> enchantments = new HashMap<Enchantment, Integer>();
+	private final Map<Enchantment, Integer> enchantments = new HashMap<>();
 
 	//######################################################################################## PUBLIC
 
@@ -35,12 +35,6 @@ public class RealItemStack extends RealItemType
 			itemStack.getType().name(), itemStack.getAmount(),
 			itemStack.getDurability(), itemStack.getEnchantments()
 		);
-	}
-
-	//--------------------------------------------------------------------------------- RealItemStack
-	public RealItemStack(net.minecraft.server.v1_7_R4.ItemStack itemStack)
-	{
-		this(itemStack.getItem().getName(), itemStack.count, (short) itemStack.getData());
 	}
 
 	//--------------------------------------------------------------------------------- RealItemStack
@@ -78,9 +72,7 @@ public class RealItemStack extends RealItemType
 			itemStack.getAmount(),
 			itemStack.getDurability()
 		);
-		if (newItemStack.getEnchantments() != null) {
-			newItemStack.addEnchantments(newItemStack.getEnchantments());
-		}
+		newItemStack.addEnchantments(newItemStack.getEnchantments());
 		return newItemStack;
 	}
 

@@ -14,11 +14,9 @@ public class RealAccounts
 {
 
 	/** Accounts list : "playerName" => (double)balance */
-	private Map<String, Double> accounts = new HashMap<String, Double>();
-
-	private final String fileName;
-
-	private final RealPlugin plugin;
+	private final Map<String, Double> accounts = new HashMap<>();
+	private final String              fileName;
+	private final RealPlugin          plugin;
 
 	//--------------------------------------------------------------------------------- RealShopsFile
 	public RealAccounts(final RealPlugin plugin)
@@ -35,7 +33,7 @@ public class RealAccounts
 	}
 
 	//------------------------------------------------------------------------------------------ load
-	public RealAccounts load()
+	public void load()
 	{
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(fileName));
@@ -43,20 +41,22 @@ public class RealAccounts
 			while ((buffer = reader.readLine()) != null) {
 				String[] line = buffer.split(";");
 				if (line.length >= 2) {
+					//noinspection CatchMayIgnoreException
 					try {
 						String playerName = line[0].trim();
 						Double balance = Double.parseDouble(line[1].trim());
 						accounts.put(playerName, balance);
-					} catch (Exception e) {
+					}
+					catch (Exception e) {
 					}
 				}
 			}
 			reader.close();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			plugin.getLog().warning("Needs " + fileName + " (will auto-create)");
 			save();
 		}
-		return this;
 	}
 
 	//------------------------------------------------------------------------------------------ save
@@ -69,18 +69,18 @@ public class RealAccounts
 			}
 			writer.flush();
 			writer.close();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			plugin.getLog().severe("Could not save " + fileName);
 		}
 	}
 
 	//------------------------------------------------------------------------------------ getBalance
-	public Double setBalance(String playerName, Double balance)
+	public void setBalance(String playerName, Double balance)
 	{
 		balance = Math.round(balance * 100d) / 100d;
-		Double result = accounts.put(playerName, balance);
+		accounts.put(playerName, balance);
 		save();
-		return result;
 	}
 
 }

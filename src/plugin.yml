@@ -1,9 +1,8 @@
-name: RealPlugin
-main: fr.crafter.tickleman.realplugin.RealPluginPlugin
-version: 1.7.10
-website: http://plugins.crafter.fr/tickleman/RealPlugin/
+api-version: 1.16
 author: tickleman
 load: STARTUP
+main: fr.crafter.tickleman.realplugin.RealPluginPlugin
+name: RealPlugin
 commands:
   realplugin:
     aliases: [rp]
@@ -17,3 +16,5 @@ commands:
     aliases: [rt]
     description: Run all tests
     usage: /rt
+version: 1.7.11
+website: http://plugins.crafter.fr/tickleman/RealPlugin/

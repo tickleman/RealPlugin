@@ -45,13 +45,16 @@ public class RealPluginPlugin extends JavaPlugin
 							try {
 								getServer().getPluginManager().loadPlugin(new File("plugins/" + args[1]));
 								sender.sendMessage("Plugin " + args[1] + " has been loaded.");
-							} catch (UnknownDependencyException e) {
+							}
+							catch (UnknownDependencyException e) {
 								sender.sendMessage("Plugin " + args[1] + " can't be loaded : unknown dependency " + e.getMessage());
 								e.printStackTrace();
-							} catch (InvalidPluginException e) {
+							}
+							catch (InvalidPluginException e) {
 								sender.sendMessage("Plugin " + args[1] + " can't be loaded : Invalid plugin " + e.getMessage());
 								e.printStackTrace();
-							} catch (InvalidDescriptionException e) {
+							}
+							catch (InvalidDescriptionException e) {
 								sender.sendMessage("Plugin " + args[1] + " can't be loaded : Invalid description " + e.getMessage());
 								e.printStackTrace();
 							}
@@ -61,40 +64,49 @@ public class RealPluginPlugin extends JavaPlugin
 							if (!plugin.isEnabled()) {
 								getServer().getPluginManager().enablePlugin(plugin);
 								sender.sendMessage("Plugin " + plugin.getName() + " has been enabled.");
-							} else {
+							}
+							else {
 								sender.sendMessage("Plugin " + plugin.getName() + " is already enabled.");
 							}
-						} else {
+						}
+						else {
 							sender.sendMessage("Plugin " + args[1] + " not found.");
 						}
 						return true;
-					} else if (args[0].equalsIgnoreCase("disable") || args[0].equalsIgnoreCase("d")) {
+					}
+					else if (args[0].equalsIgnoreCase("disable") || args[0].equalsIgnoreCase("d")) {
 						Plugin plugin = getServer().getPluginManager().getPlugin(args[1]);
 						if (plugin != null) {
 							if (plugin.isEnabled()) {
 								getServer().getPluginManager().disablePlugin(plugin);
 								sender.sendMessage("Plugin " + plugin.getName() + " has been disabled.");
-							} else {
+							}
+							else {
 								sender.sendMessage("Plugin " + plugin.getName() + " is already disabled.");
 							}
-						} else {
+						}
+						else {
 							sender.sendMessage("Plugin " + args[1] + " not found.");
 						}
 						return true;
-					} else if (args[0].equalsIgnoreCase("enable") || args[0].equalsIgnoreCase("e")) {
+					}
+					else if (args[0].equalsIgnoreCase("enable") || args[0].equalsIgnoreCase("e")) {
 						Plugin plugin = getServer().getPluginManager().getPlugin(args[1]);
 						if (plugin != null) {
 							if (!plugin.isEnabled()) {
 								getServer().getPluginManager().enablePlugin(plugin);
 								sender.sendMessage("Plugin " + plugin.getName() + " has been enabled.");
-							} else {
+							}
+							else {
 								sender.sendMessage("Plugin " + plugin.getName() + " is already enabled.");
 							}
-						} else {
+						}
+						else {
 							sender.sendMessage("Plugin " + args[1] + " not found.");
 						}
 						return true;
-					} else if (args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("r")) {
+					}
+					else if (args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("r")) {
 						Plugin plugin = getServer().getPluginManager().getPlugin(args[1]);
 						if (plugin != null) {
 							if (plugin.isEnabled()) {
@@ -104,25 +116,29 @@ public class RealPluginPlugin extends JavaPlugin
 							try {
 								getServer().getPluginManager().loadPlugin(new File("plugins/" + plugin.getName() + ".jar"));
 								sender.sendMessage("Plugin " + args[1] + " has been loaded.");
-							} catch (UnknownDependencyException e) {
+							}
+							catch (UnknownDependencyException e) {
 								sender.sendMessage("Plugin " + args[1] + " can't be loaded : unknown dependency " + e.getMessage());
 								e.printStackTrace();
-							} catch (InvalidPluginException e) {
+							}
+							catch (InvalidPluginException e) {
 								sender.sendMessage("Plugin " + args[1] + " can't be loaded : Invalid plugin " + e.getMessage());
 								e.printStackTrace();
-							} catch (InvalidDescriptionException e) {
+							}
+							catch (InvalidDescriptionException e) {
 								sender.sendMessage("Plugin " + args[1] + " can't be loaded : Invalid description " + e.getMessage());
 								e.printStackTrace();
 							}
-							plugin = getServer().getPluginManager().getPlugin(args[1]);
 							getServer().getPluginManager().enablePlugin(plugin);
 							sender.sendMessage("Plugin " + plugin.getName() + " has been enabled.");
-						} else {
+						}
+						else {
 							sender.sendMessage("Plugin " + args[1] + " not found.");
 						}
 						return true;
 					}
-				} else if (args.length == 1) {
+				}
+				else if (args.length == 1) {
 					// /realplugin help
 					if (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("h")) {
 						String[] help = {
@@ -135,13 +151,15 @@ public class RealPluginPlugin extends JavaPlugin
 						}
 						return true;
 					}
-				} else {
+				}
+				else {
 					StringBuilder list = new StringBuilder("Plugins list: ");
 					for (Plugin plugin : getServer().getPluginManager().getPlugins()) {
 						if (plugin.isEnabled()) {
-							list.append(ChatColor.DARK_GREEN + plugin.getName() + " ");
-						} else {
-							list.append(ChatColor.RED + plugin.getName() + " ");
+							list.append(ChatColor.DARK_GREEN).append(plugin.getName()).append(" ");
+						}
+						else {
+							list.append(ChatColor.RED).append(plugin.getName()).append(" ");
 						}
 					}
 					sender.sendMessage(list.toString());

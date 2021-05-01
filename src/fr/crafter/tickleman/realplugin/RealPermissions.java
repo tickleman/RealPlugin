@@ -1,18 +1,13 @@
 package fr.crafter.tickleman.realplugin;
 
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-
-import com.nijiko.permissions.PermissionHandler;
-import com.nijikokun.bukkit.Permissions.Permissions;
 
 //########################################################################################### Perms
 public class RealPermissions
 {
 
-	private RealPlugin plugin;
-	private String permissionsPluginName;
-	private PermissionHandler permissionsHandler;
+	private final RealPlugin plugin;
+	private final String permissionsPluginName;
 	boolean permissionsEnabled = false;
 
 	//----------------------------------------------------------------------------------------- Perms
@@ -25,7 +20,6 @@ public class RealPermissions
 	//---------------------------------------------------------------------------- permissionsEnabled
 	public void disablePermissionsHandler()
 	{
-		permissionsHandler = null;
 		permissionsEnabled = false;
 	}
 
@@ -48,11 +42,11 @@ public class RealPermissions
 			result = player.isOp()
 				? plugin.opHasPermission(permissionString)
 				: plugin.playerHasPermission(permissionString);
-		} else if (permissionsPluginName.equals("bukkit")) {
+		}
+		else if (permissionsPluginName.equals("bukkit")) {
 			result = player.hasPermission(permissionString);
-		} else if (permissionsPluginName.equals("permissions") && (permissionsHandler != null)) {
-			result = permissionsHandler.has(player, permissionString);
-		} else {
+		}
+		else {
 			result = false;
 		}
 		// permission universal .* manager
@@ -64,18 +58,6 @@ public class RealPermissions
 			}
 		}
 		return result;
-	}
-
-	//------------------------------------------------------------------------ initPermissionsHandler
-	public void initPermissionsHandler()
-	{
-		if (permissionsPluginName.equals("permissions") && !permissionsEnabled) {
-			Plugin permissions = plugin.getServer().getPluginManager().getPlugin("Permissions");
-			if (permissions != null) {
-				permissionsHandler = ((Permissions)permissions).getHandler();
-				permissionsEnabled = true;
-			}
-		}
 	}
 
 }
